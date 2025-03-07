@@ -1,2 +1,25 @@
-$primary: #B51700;
+$primary: #B272A4;
+$secondary: #F4F4F4;
 $font-family-base: "akhand", sans-serif;
+
+:root {
+    --ion-color-primary: #B272A4 !important; 
+    --ion-color-primary-rgb: 178, 114, 164 !important;
+    --ion-color-primary-contrast: #ffffff !important;
+    --ion-color-primary-contrast-rgb: 255, 255, 255 !important;
+    --ion-color-primary-shade: #9e6491 !important;
+    --ion-color-primary-tint: #c285b2 !important;
+    --ion-safe-area-top: env(safe-area-inset-top) !important;
+  }
+  
+ion-button {
+    --color: $primary;
+    color: #FFF;
+}
+
+
+ion-tab-bar {
+  --background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);             
+  -webkit-backdrop-filter: blur(20px);   
+}

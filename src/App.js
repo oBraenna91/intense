@@ -5,28 +5,31 @@ import { Route } from 'react-router-dom';
 import LoginPage from './pages/login';
 import ResetPasswordPage from './pages/resetPassword';
 import SignUpPage from './pages/signUp';
-import Tabs from './components/tabsNavigation';
-import DetailsOnlyPage from './pages/detailsOnly';
-import Scoreboard from './pages/scoreboard';
-import GameDetailsPage from './pages/gameDetails';
-import SeasonDetailsPage from './pages/seasonsDetails';
+import Tabs from './pages/tabsNavigation';
+import { AuthProvider } from './contexts/auth';
+//import { RequestCountProvider } from './contexts/RequestCount';
+import IndexRedirect from './pages/indexRedirect';
+import SetupUserPage from './pages/setupUser';
+import ProtectedRoute from './privateRoute/privateRoute';
 
 function App() {
+
   return (
     <IonApp>
-      <IonReactRouter>
-          <IonRouterOutlet>
-            <Route exact path="/" component={LoginPage}/>
-            <Route path="/login" component={LoginPage}/>
-            <Route path="/reset-password" component={ResetPasswordPage}/>
-            <Route path="/sign-up" component={SignUpPage} />
-            <Route path="/scoreboard" component={Scoreboard} />
-            <Route path="/app" component={Tabs} />
-            <Route path="/detailsonly" component={DetailsOnlyPage}/>
-            <Route path="/game/:id" component={GameDetailsPage} />
-            <Route path="/seasons/:seasonId" component={SeasonDetailsPage}/>
-          </IonRouterOutlet>
-      </IonReactRouter>
+      <AuthProvider>
+        {/* <RequestCountProvider> */}
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <Route exact path="/" component={IndexRedirect}/>
+              <Route path="/login" component={LoginPage}/>
+              <Route path="/reset-password" component={ResetPasswordPage}/>
+              <Route path="/sign-up" component={SignUpPage} />
+              <ProtectedRoute path="/setup-user" component={SetupUserPage}/>
+              <ProtectedRoute path="/app" component={Tabs}/>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        {/* </RequestCountProvider> */}
+      </AuthProvider>
     </IonApp>
   );
 }

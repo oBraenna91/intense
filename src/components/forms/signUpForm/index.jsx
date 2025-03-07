@@ -3,7 +3,6 @@ import { supabase } from '../../../supabaseClient.js';
 
 export default function SignUpForm() {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [message, setMessage] = useState('');
@@ -13,6 +12,7 @@ export default function SignUpForm() {
     setErrorMsg('');
     setMessage('');
   
+    //eslint-disable-next-line
     const { data, error } = await supabase.auth.signUp({
       email,
       password
@@ -21,27 +21,9 @@ export default function SignUpForm() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-      const user = data.user;
-  
-      if (user) {
-        const { error: insertError } = await supabase
-          .from('users')
-          .insert({
-            id: user.id,
-            name: name,
-            email: email,
-            isAdmin: true,
-          });
-  
-        if (insertError) {
-          setErrorMsg('Kunne ikke opprette brukerprofil.');
-          console.error(insertError);
-        } else {
           setMessage('Check your e-mail to verify your account!');
         }
-      }
-    }
-  };
+    };
 
   return (
     <form className="qute-form col-10 m-auto" onSubmit={signUpUser}>
@@ -57,17 +39,6 @@ export default function SignUpForm() {
           required
           className="form-input"
           placeholder="E-mail"
-        />
-      </div>
-      <div className="label-input-container">
-        <label className="label">Navn</label>
-        <input 
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="form-input"
-          placeholder="Navn"
         />
       </div>
       <div className="label-input-container">
