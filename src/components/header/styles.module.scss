@@ -1,0 +1,19 @@
+.navbar {
+    position:fixed;
+    bottom:0;
+    left:0;
+    padding-bottom: 5vh;
+    padding-top: 2vh;
+    background-color: transparent;
+}
+
+.iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 100%;
+    font-size: 2em;
+}

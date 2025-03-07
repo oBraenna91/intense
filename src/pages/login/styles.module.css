@@ -1,0 +1,25 @@
+.forgotPasswordContainer, .signUpContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  width: 80%;
+  gap: 10px;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.forgotPasswordContainer {
+  margin-top: 30%;
+}
+
+.redirectWriting {
+  font-style: italic;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+/*# sourceMappingURL=styles.module.css.map */
