@@ -12,7 +12,7 @@ export default function LogoutButton() {
     if (confirmed) {
       await supabase.auth.signOut();
       alert('You are now logged out!')
-      router.push('/', 'back');
+      router.push('/login', 'back');
     }
   };
 

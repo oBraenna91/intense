@@ -1,25 +1,41 @@
-$primary: #B272A4;
-$secondary: #F4F4F4;
+$primary: #6ef25a;
+$secondary: #737373;
 $font-family-base: "akhand", sans-serif;
 
 :root {
-    --ion-color-primary: #B272A4 !important; 
-    --ion-color-primary-rgb: 178, 114, 164 !important;
-    --ion-color-primary-contrast: #ffffff !important;
+    --ion-color-primary: #6ef25a !important; 
+    --ion-color-primary-rgb: 64, 224, 208 !important;
+    --ion-color-primary-contrast: #000 !important;
     --ion-color-primary-contrast-rgb: 255, 255, 255 !important;
-    --ion-color-primary-shade: #9e6491 !important;
-    --ion-color-primary-tint: #c285b2 !important;
+    --ion-color-primary-shade: #30C9C3 !important;
+    --ion-color-primary-tint: #A7E7E5 !important;
     --ion-safe-area-top: env(safe-area-inset-top) !important;
   }
   
 ion-button {
     --color: $primary;
-    color: #FFF;
+    color: #000;
 }
 
+ion-back-button {
+    --color:#000;
+}
 
+//ion-header, 
+//ion-toolbar 
 ion-tab-bar {
-  --background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20px);             
-  -webkit-backdrop-filter: blur(20px);   
+  --background: rgba(115, 115, 115, 0.2);
+  backdrop-filter: blur(15px);             
+  -webkit-backdrop-filter: blur(15px);   
 }
+
+ion-segment-button {
+    color:#000 !important;
+    --color: black !important;
+    --indicator-color: black;
+  }
+
+ion-alert.custom-alert .alert-button.sc-ion-alert-ios:last-child,
+ion-alert.custom-alert .alert-button-inner.sc-ion-alert-ios {
+      color: #000 !important;
+  }
