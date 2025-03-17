@@ -34,7 +34,7 @@
 // export default TrainingTabs;
 
 import React, { useState, useRef } from 'react';
-import { IonSegment, IonSegmentButton, IonLabel, IonPage, IonContent } from '@ionic/react';
+import { IonSegment, IonSegmentButton, IonLabel, IonPage, IonContent, IonHeader, IonToolbar } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import ExerciseList from '../../components/lists/exercises';
@@ -42,9 +42,9 @@ import { useAuth } from '../../contexts/auth';
 import TrainingSessions from '../../components/subPages/trainingSessions';
 
 const TrainingTabs = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, coach } = useAuth();
   const [selectedTab, setSelectedTab] = useState('programs');
-  const swiperRef = useRef(null); // Bruker useRef for å lagre swiper-instansen
+  const swiperRef = useRef(null);
 
   const slideOpts = {
     initialSlide: 0,
@@ -69,30 +69,37 @@ const TrainingTabs = () => {
 
   return (
     <IonPage>
-      <IonContent fullscreen style={{ '--padding-top': 'env(safe-area-inset-top)'  }}>
-        <h1>Trening</h1>
-        <IonSegment mode="md" value={selectedTab} onIonChange={handleSegmentChange}>
-          <IonSegmentButton value="programs">
-            <IonLabel>Program</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="sessions">
-            <IonLabel>Økter</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="bank">
-            <IonLabel>Øvelser</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
-
+        <IonHeader>
+            <IonToolbar className="white-toolbar">
+                <div className="d-flex flex-column">
+                    <h1 style={{padding: '16px'}}>Trening</h1>
+                    <IonSegment mode="md" value={selectedTab} onIonChange={handleSegmentChange}>
+                    <IonSegmentButton value="programs">
+                        <IonLabel>Program</IonLabel>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="sessions">
+                        <IonLabel>Økter</IonLabel>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="bank">
+                        <IonLabel>Øvelser</IonLabel>
+                    </IonSegmentButton>
+                    </IonSegment>
+                </div>
+            </IonToolbar>
+        </IonHeader>
+      <IonContent fullscreen 
+      //style={{ '--padding-top': 'env(safe-area-inset-top)'  }}
+      >
         <Swiper
           {...slideOpts}
           onSwiper={(swiper) => { swiperRef.current = swiper; }}
         >
           <SwiperSlide>
-            <div>Innhold for Treningsøkter</div>
+            <div>Innhold for Treningsprogram</div>
           </SwiperSlide>
           <SwiperSlide>
             <div>
-                <TrainingSessions userId={user.id}/>
+                <TrainingSessions userId={user.id} coachId={coach?.id}/>
             </div>
           </SwiperSlide>
           <SwiperSlide>

@@ -7,6 +7,9 @@ import { home, heart, barbell } from 'ionicons/icons';
 import SpecificExercisePage from '../specificExercise';
 import LogoutPage from '../logout';
 import TrainingTabs from '../training';
+import SpecificSessionPage from '../specificSession';
+import WorkoutSessionBuilder from '../../components/forms/coaches/sessions';
+import UpdateSessionPage from '../editSessionPage';
 
 
 export default function Tabs() {
@@ -15,7 +18,8 @@ export default function Tabs() {
 
     const hideTabBarPrefixes = [
         '/app/exercise/',
-        
+        '/app/session/',
+        '/app/create-session',
       ];
 
       const shouldHideTabBar = hideTabBarPrefixes.some(prefix =>
@@ -29,6 +33,9 @@ export default function Tabs() {
                 <Route exact path="/app/exercise/:exerciseId" component={SpecificExercisePage}/>
                 <Route exact path="/app/logout" component={LogoutPage} />
                 <Route exact path="/app/training" component={TrainingTabs} />
+                <Route exact path="/app/session/:sessionId" component={SpecificSessionPage} />
+                <Route exact path="/app/session/:sessionId/edit" component={UpdateSessionPage} />
+                <Route exact path="/app/create-session" component={WorkoutSessionBuilder} />
                 <Route exact path="/app">
                     <Redirect to="/app/home"/>
                 </Route> 

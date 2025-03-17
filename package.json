@@ -6,6 +6,7 @@
     "@capacitor/cli": "^7.0.1",
     "@capacitor/core": "^7.0.1",
     "@capacitor/ios": "^7.0.1",
+    "@fseehawer/react-circular-slider": "^2.7.0",
     "@ionic/react": "^8.4.1",
     "@ionic/react-router": "^8.4.1",
     "@supabase/supabase-js": "^2.47.10",

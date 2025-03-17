@@ -24,7 +24,7 @@ ion-back-button {
 //ion-header, 
 //ion-toolbar 
 ion-tab-bar {
-  --background: rgba(115, 115, 115, 0.2);
+  --background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(15px);             
   -webkit-backdrop-filter: blur(15px);   
 }
@@ -39,3 +39,7 @@ ion-alert.custom-alert .alert-button.sc-ion-alert-ios:last-child,
 ion-alert.custom-alert .alert-button-inner.sc-ion-alert-ios {
       color: #000 !important;
   }
+
+ion-header.special-header {
+    --background:none !important;
+}

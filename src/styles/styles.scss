@@ -21,6 +21,10 @@
   --padding-top: 5vh !important;
 }
 
+ion-modal.straight-modal {
+  --border-radius: 0 !important; 
+}
+
 .modal-content {
   padding-top: 30px;
   width: 90%;
@@ -143,4 +147,39 @@
 
 ion-item.list-card {
   --inner-border-width: 0px !important;
+}
+
+.image-overflow-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+
+.image-overflow-image {
+  scroll-snap-align: center;
+}
+
+.sets-container {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap; /* Sørger for at teksten ikke brytes */
+  text-overflow: ellipsis; /* Viser "..." ved overflow */
+}
+
+ion-toolbar.white-toolbar {
+  background-color: white !important;
+  --background: #fff !important;
+}
+ion-toolbar.trans-toolbar {
+  background-color: none !important;
+  --background: none !important;
+}
+
+.header-ios ion-toolbar:last-of-type {
+  --border-width: 0;
 }

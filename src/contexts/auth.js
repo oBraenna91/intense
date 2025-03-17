@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (currentUser) => {
@@ -21,6 +22,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchCoachProfile = async (currentUser) => {
+    if (currentUser) {
+      const { data, error } = await supabase
+        .from('coaches')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+      if (!error && data) {
+        setCoach(data);
+      }
+    }
+  };
+
   useEffect(() => {
     const getSessionAndProfile = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -28,6 +42,7 @@ export const AuthProvider = ({ children }) => {
       setUser(currentUser);
       if (currentUser) {
         await fetchProfile(currentUser);
+        await fetchCoachProfile(currentUser);
       }
       setLoading(false);
     };
@@ -49,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   }, [user?.id]);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, fetchProfile }}>
+    <AuthContext.Provider value={{ user, profile, coach, loading, fetchProfile }}>
       {children}
     </AuthContext.Provider>
   );
