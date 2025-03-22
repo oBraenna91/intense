@@ -1,5 +1,5 @@
 import { supabase } from "../../supabaseClient";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 export const createWorkoutSession = async (sessionData) => {
     const { title, description, exercises, created_by, cover_image, main_focus, pause_timer } = sessionData;
@@ -116,13 +116,36 @@ export const createWorkoutSession = async (sessionData) => {
         setLoading(false);
       }
     }, [sessionId]);
-  
+
     useEffect(() => {
       fetchSession();
     }, [fetchSession]);
   
     return { session, loading, error, refetch: fetchSession };
   };
+
+  export async function getSpecificSession(sessionId) {
+    try {
+      const { data, error } = await supabase
+      .from('workout_sessions')
+      .select(`
+        *,
+        workout_session_exercises (
+          *,
+          exercise: exercises ( id, name, image_url ),
+          workout_session_exercise_sets ( * )
+        ),
+        cover_image: workout_cover_images ( id, image_url )
+      `)
+      .eq('id', sessionId)
+      .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   export async function deleteSession(sessionId) {
     try {

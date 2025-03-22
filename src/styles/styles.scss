@@ -7,17 +7,12 @@
     font-style: normal;
 }
 
-// body {
-//     padding-top: 5vh;
-//     padding-left: 3%;
-//     padding-right: 3%;
-//     font-family: "akhand", sans-serif ;
-//     font-weight: 400;
-//     font-style: normal;
-// }
+.reg-pad {
+  padding: 16px;
+}
 
  ion-modal{
-  --border-radius: 50px !important;
+  --border-radius: 30px !important;
   --padding-top: 5vh !important;
 }
 

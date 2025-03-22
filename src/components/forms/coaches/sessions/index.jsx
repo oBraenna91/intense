@@ -586,7 +586,7 @@ import { createWorkoutSession } from '../../../../hooks/sessions';
 import { supabase } from '../../../../supabaseClient';
 import { useAuth } from '../../../../contexts/auth';
 import { v4 as uuidv4 } from 'uuid';
-import PauseCircularSlider from '../../../lists/timePicker';
+import PauseCircularInput from '../../../lists/timePicker/test';
 
 const WorkoutSessionBuilder = () => {
   const { user, coach } = useAuth();
@@ -965,7 +965,7 @@ const WorkoutSessionBuilder = () => {
                 <div className={`text-center mb-3`}>
                     <h2>Pause-timer</h2>
                 </div>
-                <PauseCircularSlider value={pause} onChange={setPause} />
+                <PauseCircularInput seconds={pause} onChange={setPause} />
             </div>
         </IonItem>
 
@@ -1000,7 +1000,7 @@ const WorkoutSessionBuilder = () => {
                     onIonInput={e => setSearchText(e.detail.value)}
                     placeholder="Søk øvelse..."
                   />
-                  <IonItem>
+                  <IonItem> 
                     <IonLabel>Muskelgruppe</IonLabel>
                     <MuscleSelect 
                       selectedMuscle={selectedMuscle} 

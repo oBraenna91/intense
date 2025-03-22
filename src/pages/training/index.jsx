@@ -1,45 +1,11 @@
-// import React from 'react';
-// import { IonSegment, IonSegmentButton, IonLabel, IonPage, IonContent, IonSegmentView, IonSegmentContent } from '@ionic/react';
-// import ExerciseList from '../../components/lists/exercises';
-// import { useAuth } from '../../contexts/auth';
-
-// const TrainingTabs = () => {
-
-//     const { user, profile } = useAuth();
-
-//   return (
-//     <IonPage>
-//         <IonContent fullscreen style={{ '--padding-top': 'env(safe-area-inset-top)'  }}>
-//             <IonSegment mode="md">
-//                 <IonSegmentButton value="first" content-id="first">
-//                     <IonLabel>First</IonLabel>
-//                 </IonSegmentButton>
-//                 <IonSegmentButton value="second" content-id="second">
-//                     <IonLabel>second</IonLabel>
-//                 </IonSegmentButton>
-//                 <IonSegmentButton value="third" content-id="third">
-//                     <IonLabel>third</IonLabel>
-//                 </IonSegmentButton>
-//             </IonSegment>
-//             <IonSegmentView>
-//                 <IonSegmentContent id="first">First</IonSegmentContent>
-//                 <IonSegmentContent id="second">second</IonSegmentContent>
-//                 <IonSegmentContent id="third"><ExerciseList userId={user.id} userRole={profile.role}/></IonSegmentContent>
-//             </IonSegmentView>
-//         </IonContent>
-//     </IonPage>
-//   );
-// };
-
-// export default TrainingTabs;
-
 import React, { useState, useRef } from 'react';
-import { IonSegment, IonSegmentButton, IonLabel, IonPage, IonContent, IonHeader, IonToolbar } from '@ionic/react';
+import { IonSegment, IonSegmentButton, IonLabel, IonPage, IonContent, IonHeader, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import ExerciseList from '../../components/lists/exercises';
 import { useAuth } from '../../contexts/auth';
 import TrainingSessions from '../../components/subPages/trainingSessions';
+import ProgramsList from '../../components/lists/programs';
 
 const TrainingTabs = () => {
   const { user, profile, coach } = useAuth();
@@ -50,7 +16,9 @@ const TrainingTabs = () => {
     initialSlide: 0,
     speed: 400,
     touchRatio: 0,       
-    simulateTouch: false
+    simulateTouch: false,
+    observer: true,            
+    observeParents: true 
   };
 
   const goToSlide = (index) => {
@@ -58,6 +26,14 @@ const TrainingTabs = () => {
       swiperRef.current.slideTo(index);
     }
   };
+
+  useIonViewWillEnter(() => {
+    if (swiperRef.current) {
+      setTimeout(() => {
+        swiperRef.current.update();
+      }, 100);
+    }
+  });
 
   const handleSegmentChange = (e) => {
     const value = e.detail.value;
@@ -72,7 +48,7 @@ const TrainingTabs = () => {
         <IonHeader>
             <IonToolbar className="white-toolbar">
                 <div className="d-flex flex-column">
-                    <h1 style={{padding: '16px'}}>Trening</h1>
+                    <h1 style={{padding: '16px'}}>Treningssenter</h1>
                     <IonSegment mode="md" value={selectedTab} onIonChange={handleSegmentChange}>
                     <IonSegmentButton value="programs">
                         <IonLabel>Program</IonLabel>
@@ -87,19 +63,21 @@ const TrainingTabs = () => {
                 </div>
             </IonToolbar>
         </IonHeader>
-      <IonContent fullscreen 
-      //style={{ '--padding-top': 'env(safe-area-inset-top)'  }}
-      >
+      <IonContent fullscreen >
         <Swiper
           {...slideOpts}
           onSwiper={(swiper) => { swiperRef.current = swiper; }}
+          autoHeight={true}
         >
           <SwiperSlide>
-            <div>Innhold for Treningsprogram</div>
+            <div>
+              <ProgramsList />
+              {/* <ProgramBuilder /> */}
+            </div>
           </SwiperSlide>
           <SwiperSlide>
             <div>
-                <TrainingSessions userId={user.id} coachId={coach?.id}/>
+              <TrainingSessions userId={user.id} coachId={coach?.id}/>
             </div>
           </SwiperSlide>
           <SwiperSlide>

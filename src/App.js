@@ -15,22 +15,23 @@ import ProtectedRoute from './privateRoute/privateRoute';
 function App() {
 
   return (
-    <IonApp>
-      <AuthProvider>
-        {/* <RequestCountProvider> */}
-          <IonReactRouter>
-            <IonRouterOutlet>
-              <Route exact path="/" component={IndexRedirect}/>
-              <Route path="/login" component={LoginPage}/>
-              <Route path="/reset-password" component={ResetPasswordPage}/>
-              <Route path="/sign-up" component={SignUpPage} />
-              <ProtectedRoute path="/setup-user" component={SetupUserPage}/>
-              <ProtectedRoute path="/app" component={Tabs}/>
-            </IonRouterOutlet>
-          </IonReactRouter>
-        {/* </RequestCountProvider> */}
-      </AuthProvider>
-    </IonApp>
+      <IonApp>
+        <AuthProvider>
+            <IonReactRouter>
+                <IonRouterOutlet>
+                  <Route exact path="/" component={IndexRedirect}/>
+                  <Route path="/login" component={LoginPage}/>
+                  <Route path="/reset-password" component={ResetPasswordPage}/>
+                  <Route path="/sign-up" component={SignUpPage} />
+                  <ProtectedRoute path="/setup-user" component={SetupUserPage}/>
+                  <ProtectedRoute path="/app" component={Tabs}/>
+                </IonRouterOutlet>
+              </IonReactRouter>
+          {/* <RequestCountProvider> */}
+            
+          {/* </RequestCountProvider> */}
+        </AuthProvider>
+      </IonApp>
   );
 }
 

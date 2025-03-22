@@ -19,9 +19,6 @@ const PauseCircularSlider = ({ value = 60, onChange }) => {
         trackSize={24}
         progressSize={24}
         renderLabelValue={
-            // <div style={{ color: 'black', fontSize: '2rem' }}>
-            //   {value} sek
-            // </div>
             <div style={{
                 position: 'absolute',
                 top: '50%',

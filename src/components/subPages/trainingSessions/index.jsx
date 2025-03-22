@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import WorkoutSessionBuilder from '../../forms/coaches/sessions';
+//import WorkoutSessionBuilder from '../../forms/coaches/sessions';
 import { getTrainingSessions } from '../../../hooks/sessions';
-import { IonAccordion, IonAccordionGroup, IonButton, IonIcon, IonItem, IonLabel, IonList, IonModal, IonSelect, IonSelectOption, useIonRouter, useIonViewWillEnter, 
+import { IonAccordion, IonAccordionGroup, IonButton, IonIcon, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, useIonRouter, useIonViewWillEnter, 
     //IonToggle 
 } from '@ionic/react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
+//import { Swiper, SwiperSlide } from 'swiper/react';
+//import 'swiper/css';
 import SessionCards from '../../cards/sessions';
 import MuscleSelect from '../../lists/muscles';
 import { filterOutline } from 'ionicons/icons';
+import styles from './styles.module.scss';
 
 export default function TrainingSessions({ userId, coachId }) {
 
     const [sessions, setSessions] = useState([]);
-    const [swiperInstance, setSwiperInstance] = useState(null);
+    //const [swiperInstance, setSwiperInstance] = useState(null);
     const [loading, setLoading] = useState(false);
     const router = useIonRouter();
 
@@ -22,7 +23,7 @@ export default function TrainingSessions({ userId, coachId }) {
     const [sortOrder, setSortOrder] = useState('asc');
     //const [showMineOnly, setShowMineOnly] = useState(false);
     const [sortDateOrder, setSortDateOrder] = useState('newest');
-    const [createSessionModal, setCreateSessionModal] = useState(false);
+    //const [createSessionModal, setCreateSessionModal] = useState(false);
 
     useEffect(() => {
         fetchSessions();
@@ -33,7 +34,6 @@ export default function TrainingSessions({ userId, coachId }) {
         setLoading(true);
         try {
           const data = await getTrainingSessions(coachId);
-          console.log("Hentede sessions:", data);
           setSessions(data);
         } catch (error) {
           console.error('Feil ved henting av treningsøkter:', error.message);
@@ -43,8 +43,16 @@ export default function TrainingSessions({ userId, coachId }) {
       };
 
       useIonViewWillEnter(() => {
-        fetchSessions();
-      });
+        async function fetchAgain() {
+          try {
+            const data = await getTrainingSessions(coachId);
+            setSessions(data);
+          } catch(error) {
+            console.error(error);
+          }
+        }
+        fetchAgain();
+      },[coachId]);
 
       const filteredSessions = sessions.filter(session => {
         const searchLower = searchTerm.toLowerCase();
@@ -71,12 +79,12 @@ export default function TrainingSessions({ userId, coachId }) {
       });
       
 
-      const handleSessionCreated = (newSession) => {
-        setSessions(prevSessions => [newSession, ...prevSessions]);
-        if (swiperInstance) {
-          swiperInstance.slideTo(0);
-        }
-      };
+      // const handleSessionCreated = (newSession) => {
+      //   setSessions(prevSessions => [newSession, ...prevSessions]);
+      //   if (swiperInstance) {
+      //     swiperInstance.slideTo(0);
+      //   }
+      // };
 
       const redirectToCreateSession = () => {
         router.push('/app/create-session', 'forward');
@@ -90,9 +98,9 @@ export default function TrainingSessions({ userId, coachId }) {
         return(<>Laster...</>)
       }
     return(
-        <>
-        <Swiper onSwiper={setSwiperInstance} style={{ height: '100%' }}>
-        <SwiperSlide>
+        <div>
+        {/* <Swiper onSwiper={setSwiperInstance} style={{ height: 'auto', minHeight: '100%' }}>
+        <SwiperSlide> */}
             <div className="d-flex justify-content-center"><h2>Dine treningsøkter</h2></div>
             <IonAccordionGroup>
             <IonAccordion value="filters">
@@ -154,12 +162,23 @@ export default function TrainingSessions({ userId, coachId }) {
           </div>
           <div style={{ padding: '16px' }}>
             <IonList>
-              {sortedSessions.map((session, index) => (
-                <SessionCards key={index} session={session} />
-              ))}
+              {sortedSessions.length > 0 ? (
+                sortedSessions.map((session, index) => (
+                  <SessionCards key={index} session={session} />
+                ))
+              ): (
+                  <div className={`${styles.card}`}>
+                      <div className={`${styles.overlay}`}></div>
+                      <div className={styles.textDiv}>
+                          <div className={styles.title}>Du har ingen økter foreløpig!</div>
+                          <div className={styles.focus}></div>
+                      </div>
+                  </div>
+              )
+            }
             </IonList>
           </div>
-        </SwiperSlide>
+        {/* </SwiperSlide>
         <IonModal
             isOpen={createSessionModal}
             onDidDismiss={() => setCreateSessionModal(false)}
@@ -171,7 +190,7 @@ export default function TrainingSessions({ userId, coachId }) {
                 <WorkoutSessionBuilder userId={userId} onSessionCreated={handleSessionCreated}  onBack={() => swiperInstance?.slideTo(0)} />
             </div>
         </IonModal>
-      </Swiper>
-        </>
+      </Swiper> */}
+        </div>
     )
 }

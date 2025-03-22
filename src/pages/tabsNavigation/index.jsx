@@ -10,6 +10,8 @@ import TrainingTabs from '../training';
 import SpecificSessionPage from '../specificSession';
 import WorkoutSessionBuilder from '../../components/forms/coaches/sessions';
 import UpdateSessionPage from '../editSessionPage';
+import ProgramBuilder from '../../components/forms/coaches/programs';
+import SpecificProgramPage from '../specificProgram';
 
 
 export default function Tabs() {
@@ -20,6 +22,8 @@ export default function Tabs() {
         '/app/exercise/',
         '/app/session/',
         '/app/create-session',
+        '/app/create-program',
+        '/app/program/'
       ];
 
       const shouldHideTabBar = hideTabBarPrefixes.some(prefix =>
@@ -36,9 +40,11 @@ export default function Tabs() {
                 <Route exact path="/app/session/:sessionId" component={SpecificSessionPage} />
                 <Route exact path="/app/session/:sessionId/edit" component={UpdateSessionPage} />
                 <Route exact path="/app/create-session" component={WorkoutSessionBuilder} />
+                <Route exact path="/app/create-program" component={ProgramBuilder} />
+                <Route exact path="/app/program/:programId" component={SpecificProgramPage} />
                 <Route exact path="/app">
                     <Redirect to="/app/home"/>
-                </Route> 
+                </Route>
             </IonRouterOutlet>
             <IonTabBar translucent={true} slot="bottom" style={{ display: shouldHideTabBar ? 'none' : 'flex' }}>
                 <IonTabButton tab="home" href="/app/home">

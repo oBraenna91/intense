@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useExercises } from '../../../hooks/exercises';
+import React, { useState } from 'react';
+import { FetchAllExercises, useExercises } from '../../../hooks/exercises';
 import { IonAccordionGroup, IonAccordion, IonModal, IonButton, IonItem, IonToggle, IonLabel, IonSelect, IonSelectOption, useIonViewWillEnter } from '@ionic/react';
 import ExerciseForm from '../../forms/coaches/exercises/createExerciseForm';
 import ExerciseCard from '../../cards/exercises';
@@ -23,22 +23,36 @@ const ExerciseLegend = () => (
 
 const ExerciseList = ({ userId, userRole }) => {
   const router = useIonRouter();
-  const { exercises: initialExercises, loading, error, deleteExercise, fetchExercises } = useExercises(userId);
-  const [exercises, setExercises] = useState(initialExercises);
+  // const { exercises: initialExercises, loading, error, deleteExercise, fetchExercises } = useExercises(userId);
+  // const [exercises, setExercises] = useState(initialExercises);
+  const { deleteExercise } = useExercises(userId);
+  const [exercises, setExercises] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [showMineOnly, setShowMineOnly] = useState(false);
   const [selectedMuscle, setSelectedMuscle] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [isLoading, setIsLoading] = useState(false);
 
   useIonViewWillEnter(() => {
-    fetchExercises();
-  });
+    async function fetchEx() {
+      setIsLoading(true);
+      try {
+        const response = await FetchAllExercises(userId);
+        setExercises(response);
+      } catch(error) {
+        console.error(error);
+      }finally {
+        setIsLoading(false);
+      }
+    }
+    fetchEx();
+  }, [userId]);
 
-  useEffect(() => {
-    setExercises(initialExercises);
-  }, [initialExercises]);
+  // useEffect(() => {
+  //   setExercises(initialExercises);
+  // }, [initialExercises]);
 
   const handleExerciseAdded = (newExercise) => {
     setExercises(prev => [newExercise, ...prev]);
@@ -74,8 +88,7 @@ filteredExercises = filteredExercises.sort((a, b) => {
     }
   });
 
-  if (loading) return <p>Laster inn øvelser...</p>;
-  if (error) return <p>Feil: {error}</p>;
+  if (isLoading) return <p>Laster inn øvelser...</p>;
 
   return (
     <div>
@@ -147,8 +160,8 @@ filteredExercises = filteredExercises.sort((a, b) => {
       <IonModal 
         isOpen={isModalOpen} 
         onDidDismiss={() => setIsModalOpen(false)}
-        breakpoints={[0, 0.5, 0.9]} 
-        initialBreakpoint={0.55} 
+        breakpoints={[0, 1]} 
+        initialBreakpoint={1} 
         cssClass="bottom-sheet-modal"
       >
         <div className="modal-content">

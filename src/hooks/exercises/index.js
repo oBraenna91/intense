@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../supabaseClient';
 
 export const useExercises = (userId) => {
@@ -22,31 +22,61 @@ export const useExercises = (userId) => {
 //     }
 //   };
 
-const fetchExercises = async () => {
-    setLoading(true);
-    try {
-      // Vi henter også med "exercise_muscles" med tilhørende muskeldata (for eksempel navnet på muskelen)
-      const { data, error } = await supabase
-        .from('exercises')
-        .select(`
-          *,
-          exercise_muscles (
-            muscles_id,
-            muscles (
-              name
-            )
+// const fetchExercises = async () => {
+//     setLoading(true);
+//     try {
+//       const { data, error } = await supabase
+//         .from('exercises')
+//         .select(`
+//           *,
+//           exercise_muscles (
+//             muscles_id,
+//             muscles (
+//               name
+//             )
+//           )
+//         `)
+//         .or(`created_by.is.null, created_by.eq.${userId}`);
+//       if (error) throw error;
+//       setExercises(data);
+//     } catch (err) {
+//       setError(err.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+const fetchExercises = useCallback(async () => {
+  setLoading(true);
+  try {
+    const { data, error } = await supabase
+      .from('exercises')
+      .select(`
+        *,
+        exercise_muscles (
+          muscles_id,
+          muscles (
+            name
           )
-        `)
-        // For coacher henter vi både universelle øvelser og de coachen har opprettet
-        .or(`created_by.is.null, created_by.eq.${userId}`);
-      if (error) throw error;
-      setExercises(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+        )
+      `)
+      .or(`created_by.is.null, created_by.eq.${userId}`);
+    if (error) throw error;
+    setExercises(data);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}, [userId]); // Avhengighet: kun kjør på nytt når userId endres
+
+// Kall fetchExercises én gang når userId er tilgjengelig
+useEffect(() => {
+  if (userId) {
+    fetchExercises();
+  }
+  //eslint-disable-next-line
+}, [userId]);
 
   const addExercise = async (exercise) => {
     try {
@@ -146,3 +176,25 @@ const fetchExercises = async () => {
 
   return { exercises, loading, error, fetchExercises, fetchNewExercise, fetchUpdatedExercise, addExercise, updateExercise, deleteExercise };
 };
+
+
+export async function FetchAllExercises(userId) {
+    try {
+      const { data, error } = await supabase
+        .from('exercises')
+        .select(`
+          *,
+          exercise_muscles (
+            muscles_id,
+            muscles (
+              name
+            )
+          )
+        `)
+        .or(`created_by.is.null, created_by.eq.${userId}`);
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      console.error(err);
+    } 
+  }
