@@ -252,6 +252,8 @@ const ProgramBuilder = () => {
     );
   };
 
+  
+
   const openSessionModal = (weekId, dayNumber) => {
     setCurrentWeekId(weekId);
     setCurrentDayNumber(dayNumber);

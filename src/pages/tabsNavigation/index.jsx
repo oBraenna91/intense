@@ -12,6 +12,7 @@ import WorkoutSessionBuilder from '../../components/forms/coaches/sessions';
 import UpdateSessionPage from '../editSessionPage';
 import ProgramBuilder from '../../components/forms/coaches/programs';
 import SpecificProgramPage from '../specificProgram';
+import EditProgramPage from '../editProgramPage';
 
 
 export default function Tabs() {
@@ -42,6 +43,7 @@ export default function Tabs() {
                 <Route exact path="/app/create-session" component={WorkoutSessionBuilder} />
                 <Route exact path="/app/create-program" component={ProgramBuilder} />
                 <Route exact path="/app/program/:programId" component={SpecificProgramPage} />
+                <Route exact path="/app/program/:programId/edit" component={EditProgramPage} />
                 <Route exact path="/app">
                     <Redirect to="/app/home"/>
                 </Route>

@@ -48,6 +48,10 @@ export default function SpecificProgramPage() {
             }
           };
 
+    const redirectToEdit = () => {
+        router.push(`/app/program/${programId}/edit`, 'forward');
+    }
+
 
     return(
         <IonPage>
@@ -159,7 +163,7 @@ export default function SpecificProgramPage() {
                         </div>
                     )}
                     <div className="col-12 d-flex flex-column align-items-center my-5">
-                        <IonButton className="col-10">Rediger program</IonButton>
+                        <IonButton className="col-10" onClick={redirectToEdit}>Rediger program</IonButton>
                         <div className="col-10 mt-3">
                             <SwipeableButton
                                 ref={swipeButtonRef}
