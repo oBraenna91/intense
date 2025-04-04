@@ -2,10 +2,10 @@ import React, { useState, useRef } from 'react';
 import { IonSegment, IonSegmentButton, IonLabel, IonPage, IonContent, IonHeader, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import ExerciseList from '../../components/lists/exercises';
-import { useAuth } from '../../contexts/auth';
-import TrainingSessions from '../../components/subPages/trainingSessions';
-import ProgramsList from '../../components/lists/programs';
+import ExerciseList from '../../../components/lists/exercises';
+import { useAuth } from '../../../contexts/auth';
+import TrainingSessions from '../../../components/subPages/trainingSessions';
+import ProgramsList from '../../../components/lists/programs';
 
 const TrainingTabs = () => {
   const { user, profile, coach } = useAuth();
@@ -44,9 +44,11 @@ const TrainingTabs = () => {
   };
 
   return (
-    <IonPage>
+    <IonPage style={{ backgroundColor: 'var(--ion-color-light)' }}>
         <IonHeader>
-            <IonToolbar className="white-toolbar">
+            <IonToolbar className="white-toolbar"
+              style={{ boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}
+            >
                 <div className="d-flex flex-column">
                     <h1 style={{padding: '16px'}}>Treningssenter</h1>
                     <IonSegment mode="md" value={selectedTab} onIonChange={handleSegmentChange}>
@@ -63,25 +65,33 @@ const TrainingTabs = () => {
                 </div>
             </IonToolbar>
         </IonHeader>
-      <IonContent fullscreen >
+      <IonContent fullscreen style={{ '--background': 'var(--ion-color-light)' }}>
         <Swiper
           {...slideOpts}
           onSwiper={(swiper) => { swiperRef.current = swiper; }}
           autoHeight={true}
         >
           <SwiperSlide>
-            <div>
+            <div style={{ background: 'var(--ion-color-light)' }}>
               <ProgramsList />
-              {/* <ProgramBuilder /> */}
+            </div>
+          </SwiperSlide>
+          {/* <SwiperSlide>
+            <div style={{ background: 'var(--ion-color-light)' }}>
+              <TrainingSessions userId={user.id} coachId={coach.id}/>
+            </div>
+          </SwiperSlide> */}
+          <SwiperSlide>
+            <div style={{ background: 'var(--ion-color-light)' }}>
+              {user?.id && coach?.id ? (
+                <TrainingSessions userId={user.id} coachId={coach.id} />
+              ) : (
+                <p>Laster økter...</p>
+              )}
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div>
-              <TrainingSessions userId={user.id} coachId={coach?.id}/>
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div>
+            <div style={{ background: 'var(--ion-color-light)' }}>
               <ExerciseList userId={user.id} userRole={profile.role} />
             </div>
           </SwiperSlide>

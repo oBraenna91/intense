@@ -494,14 +494,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { useIonRouter } from '@ionic/react';
 import { trashOutline } from 'ionicons/icons';
-import { useExercises } from '../../hooks/exercises';
-import { useAuth } from '../../contexts/auth';
+import { useExercises } from '../../../hooks/exercises';
+import { useAuth } from '../../../contexts/auth';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import MuscleSelect from '../../components/lists/muscles';
-import { supabase } from '../../supabaseClient';
-import { getSpecificSession, updateWorkoutSession } from '../../hooks/sessions';
-import PauseCircularInput from '../../components/lists/timePicker/test';
+import MuscleSelect from '../../../components/lists/muscles';
+import { supabase } from '../../../supabaseClient';
+import { getSpecificSession, updateWorkoutSession } from '../../../hooks/sessions';
+import PauseCircularInput from '../../../components/lists/timePicker/test';
 
 
 function flattenExercises(workoutSessionExercises) {
@@ -752,35 +752,6 @@ export default function UpdateSessionPage() {
     }
   };
 
-  // If still "loading" from the first fetch, show a spinner or whatever
-  // if (loading) {
-  //   return <IonPage><IonContent><IonSpinner /></IonContent></IonPage>;
-  // }
-
-  // If error, handle it
-  if (error) {
-    return (
-      <IonPage>
-        <IonContent>
-          <p>Noe gikk galt: {error.message}</p>
-          <IonButton onClick={() => router.push(`/app/session/${sessionId}`, 'back')}>
-            Tilbake
-          </IonButton>
-        </IonContent>
-      </IonPage>
-    );
-  }
-
-  // If session is not loaded (for any reason), you could handle it similarly
-  if (!session) {
-    return (
-      <IonPage>
-        <IonContent>
-          <p>Finner ikke økt...</p>
-        </IonContent>
-      </IonPage>
-    );
-  }
 
   return (
     <IonPage>
@@ -794,6 +765,8 @@ export default function UpdateSessionPage() {
       <IonContent>
         {isSaving && <IonSpinner />}
         {loading && <IonSpinner />}
+        {!session && <IonSpinner />}
+        {error && (<div>Oida, her har det skjedd en feil</div>)}
 
         <IonItem>
           <IonLabel position="stacked">Navn</IonLabel>
@@ -868,15 +841,17 @@ export default function UpdateSessionPage() {
           </div>
         </IonItem>
 
-        <div style={{ marginTop: '24px' }}>
+        <div className="d-flex flex-column align-items-center" style={{ marginTop: '24px' }}>
+          <div>
             <h2 className="text-center">Forsidebilde</h2>
-        </div>
-          <div style={{ display: 'flex', overflowX: 'auto', padding: '0 16px 16px 16px' }}>
+          </div>
+          <div style={{ display: 'flex', overflowX: 'scroll', padding: '16px' }}>
             {coverImages.map(image => (
               <div
                 key={image.id}
                 onClick={() => setSelectedCoverImage(image.id)}
                 style={{
+                  flex: '0 0 auto',
                   marginRight: '8px',
                   border: selectedCoverImage === image.id
                     ? '4px solid var(--ion-color-primary)'
@@ -888,11 +863,12 @@ export default function UpdateSessionPage() {
                 <img
                   src={image.image_url}
                   alt={image.name}
-                  style={{ height: '100px', borderRadius: '6px' }}
+                  style={{ height: '150px', borderRadius: '6px' }}
                 />
               </div>
             ))}
           </div>
+        </div>
 
         <div className="col-12 d-flex flex-column align-items-center justify-content-center my-5">
           <IonButton

@@ -224,3 +224,19 @@ export const createWorkoutSession = async (sessionData) => {
     
     return sessionId;
   }
+
+  export async function getProgramActivityId(sessionId, programWeekId, dayNumber) {
+    const { data, error } = await supabase
+      .from('program_activities')
+      .select('id')
+      .eq('workout_session_id', sessionId)
+      .eq('program_week_id', programWeekId)  // eller en annen kolonne som refererer til uken
+      .eq('day_number', dayNumber)
+      .single();
+  
+    if (error) {
+      console.error('Feil ved henting av program activity:', error);
+      return null;
+    }
+    return data.id;
+  }

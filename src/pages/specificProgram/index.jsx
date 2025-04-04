@@ -1,25 +1,37 @@
-import { IonAccordion, IonAccordionGroup, IonButton, IonContent, IonIcon, IonItem, IonLabel, IonPage, useIonRouter, useIonViewWillEnter } from '@ionic/react';
-import { chevronBackOutline } from 'ionicons/icons';
+import { IonAccordion, IonAccordionGroup, IonButton, IonContent, IonIcon, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonModal, IonPage, useIonRouter, useIonViewWillEnter } from '@ionic/react';
+import { addOutline, chevronBackOutline, personCircleOutline, trashOutline } from 'ionicons/icons';
 import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
-import { deleteProgram, getSpecificProgram } from '../../hooks/programs';
+import { addClientToProgram, deleteProgram, removeClientFromProgram, fetchProgramClients, getSpecificProgram } from '../../hooks/programs';
 import styles from './styles.module.scss';
 import { motion, AnimatePresence } from 'framer-motion';
 import { chevronDown } from 'ionicons/icons';
 import { SwipeableButton } from 'react-swipeable-button';
+import { fetchClients } from '../../hooks/clients';
+import { useAuth } from '../../contexts/auth';
 
 export default function SpecificProgramPage() {
     const { programId } = useParams();
+    const { coach } = useAuth();
     const router = useIonRouter();
     const [openWeekId, setOpenWeekId] = useState(null);
     const [program, setProgram] = useState(null);
     const swipeButtonRef = useRef();
-    
+    const [clients, setClients] = useState([]);
+    const [programClients, setProgramClients] = useState([]);
+    const [showAddClientModal, setShowAddClientModal] = useState(false);
+
     useIonViewWillEnter(() => {
         async function getProgram() {
             try {
                 const response = await getSpecificProgram(programId);
                 setProgram(response);
+                const clientData = await fetchClients(coach.id)
+                //console.log(clientData);
+                setClients(clientData)
+
+                const assigned = await fetchProgramClients(programId);
+                setProgramClients(assigned);
             } catch(error) {
                 console.error(error);
             }
@@ -52,6 +64,30 @@ export default function SpecificProgramPage() {
         router.push(`/app/program/${programId}/edit`, 'forward');
     }
 
+    const handleAddClient = async (clientId) => {
+        try {
+          await addClientToProgram(programId, clientId);
+          const updated = await fetchProgramClients(programId);
+          setProgramClients(updated);
+          setShowAddClientModal(false);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      const handleRemoveClient = async (clientId) => {
+        try {
+          await removeClientFromProgram(programId, clientId);
+          const updated = await fetchProgramClients(programId);
+          setProgramClients(updated);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      const unassignedClients = clients.filter(client => 
+        !programClients.some(pc => pc.client_id === client.id)
+      );
 
     return(
         <IonPage>
@@ -63,7 +99,7 @@ export default function SpecificProgramPage() {
                 >
                     <IonIcon icon={chevronBackOutline} /> Tilbake
                 </IonButton>
-                <div className={styles.whitebackground}>
+                <div className={styles.whiteBackground}>
                     {program && (
                         <div className={styles.content}>
                             <div className={`${styles.imageContainer}`} style={{ backgroundImage: `url(${program.cover_image.image_url})` }}>
@@ -174,8 +210,78 @@ export default function SpecificProgramPage() {
                                 autoWidth="true"
                             />
                         </div>
-                        
                     </div>
+                    <div className={`${styles.assignedClients} reg-pad`}>
+                        <h2>Klienter med dette programmet</h2>
+                        <IonList>
+                        {programClients.length > 0 ? (
+                            programClients.map((assignment) => (
+                                <IonItemSliding key={assignment.id}>
+                                <IonItem>
+                                  <IonIcon
+                                    icon={personCircleOutline}
+                                    slot="start"
+                                    style={{ fontSize: '2em', color: 'gray' }}
+                                  />
+                                  <IonLabel>
+                                    {assignment.clients.users.first_name} {assignment.clients.users.last_name}
+                                  </IonLabel>
+                                </IonItem>
+                                <IonItemOptions side="end">
+                                  <IonItemOption
+                                    color="danger"
+                                    onClick={() => handleRemoveClient(assignment.client_id)}
+                                  >
+                                    <IonIcon 
+                                        icon={trashOutline}
+                                        style={{fontSize: '2em'}}
+                                    />
+                                  </IonItemOption>
+                                </IonItemOptions>
+                              </IonItemSliding>
+                            ))
+                        ) : (
+                            <IonItem>
+                            <IonLabel>Ingen klienter tildelt enda</IonLabel>
+                            </IonItem>
+                        )}
+                        </IonList>
+                        <div className="col-12 d-flex justify-content-center">
+                            <IonButton className="col-10" onClick={() => setShowAddClientModal(true)}>
+                                <IonIcon icon={addOutline} /> Legg til klient
+                            </IonButton>
+                        </div>
+                    </div>
+
+                    <IonModal 
+                        isOpen={showAddClientModal} 
+                        onDidDismiss={() => setShowAddClientModal(false)}
+                        breakpoints={[0, 1]}
+                        initialBreakpoint={1}
+                    >
+                        <IonContent className="ion-padding">
+                        <h2>Legg til klient</h2>
+                        <IonList>
+                            {unassignedClients.length > 0 ? (
+                            unassignedClients.map(client => (
+                                <IonItem key={client.id} button onClick={() => handleAddClient(client.id)}>
+                                    <IonIcon icon={personCircleOutline} slot="start" style={{ fontSize: '2em', color: 'gray' }} />
+                                    <IonLabel>{client.users.first_name} {client.users.last_name}</IonLabel>
+                                </IonItem>
+                            ))
+                            ) : (
+                            <IonItem>
+                                <IonLabel>Ingen tilgjengelige klienter</IonLabel>
+                            </IonItem>
+                            )}
+                        </IonList>
+                        <div className="col-12 d-flex justify-content-center">
+                            <IonButton className="col-10" onClick={() => setShowAddClientModal(false)}>
+                                Lukk
+                            </IonButton>
+                        </div>
+                        </IonContent>
+                    </IonModal>
                 </div>
             </IonContent>
         </IonPage>

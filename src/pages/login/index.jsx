@@ -7,11 +7,11 @@ export default function LoginPage() {
   const router = useIonRouter();
 
   const redirectToSignUpPage = () => {
-    router.push('/sign-up', 'forward'); // Naviger til sign-up siden med forward-animasjon
+    router.push('/sign-up', 'forward');
   };
 
   const redirectToForgotPassword = () => {
-    router.push('/reset-password', 'forward'); // Naviger til reset-password siden med forward-animasjon
+    router.push('/reset-password', 'forward'); 
   };
 
   return (

@@ -17,7 +17,7 @@ import { useAuth } from '../../contexts/auth';
   //import ExerciseEditForm from '../components/ExerciseEditForm'; // Opprett denne komponenten for redigering
   
   export default function SpecificExercisePage() {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const currentUserId = user.id;
     const { exerciseId } = useParams();
     const [exercise, setExercise] = useState(null);
@@ -57,13 +57,15 @@ import { useAuth } from '../../contexts/auth';
         setExercise(updatedExercise);
         setShowEditModal(false);
       };
+
+      const backHref = profile?.role === 'coach' ? '/app/training' : '/app/client/training';
   
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/app/training" />
+              <IonBackButton defaultHref={backHref} />
             </IonButtons>
           </IonToolbar>
         </IonHeader>
@@ -84,7 +86,7 @@ import { useAuth } from '../../contexts/auth';
                   style={{ width: '100%', height: 'auto' }}
                 />
               )} */}
-              {exercise.video_url && (
+              {/* {exercise.video_url && (
                     <div 
                     // style={{ marginTop: '1rem' }} 
                     className="video-container">
@@ -97,15 +99,19 @@ import { useAuth } from '../../contexts/auth';
                         allowFullScreen
                         title="YouTube video player"
                         ></iframe>
-                        {/* <iframe 
-                            title="Video"
-                            src="https://player.vimeo.com/video/1064200331?h=fac5355372" 
-                            width="640" 
-                            height="564" 
-                            frameborder="0" 
-                            allow="autoplay; fullscreen" allowfullscreen>
-                        </iframe> */}
                     </div>
+                    )} */}
+                    {exercise.video_url && (
+                      <div className="video-container">
+                        <iframe
+                          width="100%"
+                          src={`https://www.youtube.com/embed/${exercise.video_url}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          title="YouTube video player"
+                        ></iframe>
+                      </div>
                     )}
               <div style={{ padding: '1rem' }}>
                 <h2>{exercise.name}</h2>

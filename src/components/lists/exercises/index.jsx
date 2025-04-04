@@ -7,6 +7,7 @@ import { useIonRouter } from '@ionic/react';
 import MuscleSelect from '../muscles';
 import { filterOutline } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
+import { useAuth } from '../../../contexts/auth';
 
 const ExerciseLegend = () => (
     <div className="d-flex col-12 justify-content-center mb-3">
@@ -23,6 +24,7 @@ const ExerciseLegend = () => (
 
 const ExerciseList = ({ userId, userRole }) => {
   const router = useIonRouter();
+  const {profile} = useAuth();
   // const { exercises: initialExercises, loading, error, deleteExercise, fetchExercises } = useExercises(userId);
   // const [exercises, setExercises] = useState(initialExercises);
   const { deleteExercise } = useExercises(userId);
@@ -59,7 +61,11 @@ const ExerciseList = ({ userId, userRole }) => {
   };
 
   const handleCardClick = (exercise) => {
-    router.push(`/app/exercise/${exercise.id}`, 'forward');
+    if (profile?.role === 'coach') {
+      router.push(`/app/exercise/${exercise.id}`, 'forward');
+    } else {
+      router.push(`/app/client/exercise/${exercise.id}`, 'forward');
+    }
   };
 
   const handleDeleteExercise = async (exercise) => {
@@ -95,23 +101,23 @@ filteredExercises = filteredExercises.sort((a, b) => {
       <h2 className="text-center">Øvelsesbank</h2>
       <IonAccordionGroup>
         <IonAccordion value="filters">
-            <IonItem slot="header" lines="none" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <IonLabel>Filtre</IonLabel>
-            <IonIcon icon={filterOutline} />
+            <IonItem slot="header" lines="none" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
+              <IonLabel>Filtre</IonLabel>
+              <IonIcon icon={filterOutline} />
             </IonItem>
-            <div className="ion-padding" slot="content">
+            <div className="ion-padding" slot="content" style={{ background: 'var(--ion-color-light)' }}>
             {userRole === 'coach' && (
-                <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                 <IonLabel>Vis kun mine øvelser</IonLabel>
                 <IonToggle slot="end" checked={showMineOnly} onIonChange={e => setShowMineOnly(e.detail.checked)} />
                 </IonItem>
             )}
-            <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                 <IonLabel>Filtrer på muskelgruppe</IonLabel>
                 {/* Her kan du bruke din egen MuscleSelect-komponent */}
                 <MuscleSelect selectedMuscle={selectedMuscle} setSelectedMuscle={setSelectedMuscle} />
             </IonItem>
-            <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                 <IonLabel>Sorter alfabetisk</IonLabel>
                 <IonSelect
                     slot="end"
@@ -133,11 +139,11 @@ filteredExercises = filteredExercises.sort((a, b) => {
         </input>
       </div>
       {userRole === 'coach' && (
-        <div className="col-12 d-flex justify-content-center">
-            <IonButton className="col-10" onClick={() => setIsModalOpen(true)}>Legg til øvelse</IonButton>
+        <div className="col-12 d-flex justify-content-center rounded-4">
+            <IonButton className="col-10 reg-shadow rounded-4" onClick={() => setIsModalOpen(true)}>Legg til øvelse</IonButton>
         </div>
       )}
-      <ExerciseLegend />
+      {userRole === 'coach' && (<ExerciseLegend />)}
       {exercises.length === 0 ? (
         <p>Ingen øvelser funnet. {userRole === 'coach' && 'Legg til en øvelse for å komme i gang!'}</p>
       ) : (

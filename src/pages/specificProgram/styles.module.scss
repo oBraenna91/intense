@@ -10,7 +10,8 @@
 }
 
 .whiteBackground {
-    background-color: #FFF;
+    background-color: #FFF !important;
+    z-index:0;
   }
 
   .overlay {

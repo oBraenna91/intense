@@ -8,6 +8,7 @@ import {
   IonLabel
 } from '@ionic/react';
 import { trash } from 'ionicons/icons';
+import styles from './styles.module.scss';
 
 const ExerciseCard = ({ exercise, onClick, isOwner, onDelete }) => {
     const muscleNames = (exercise.exercise_muscles || [])
@@ -27,10 +28,10 @@ const ExerciseCard = ({ exercise, onClick, isOwner, onDelete }) => {
                     <img src={exercise.image_url} className={`list-img`} alt="exercise" />
                 </div>
                 <div className={`list-col2`}>
-                    <div className={`list-name`}>
+                    <div className={`${styles.overshoot} list-name`}>
                         {exercise.name}
                     </div>
-                    <div className={`list-muscle`}>
+                    <div className={` list-muscle`}>
                         {displayMuscles}
                     </div>
                 </div>

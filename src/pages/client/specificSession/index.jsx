@@ -1,44 +1,76 @@
-import { IonButton,  IonContent, IonIcon,  IonPage, IonSpinner, useIonRouter } from '@ionic/react';
+import { IonButton,  IonContent, IonIcon,  IonPage, IonSpinner, useIonRouter, IonModal } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import styles from './styles.module.scss';
 import { chevronBackOutline, timerOutline } from 'ionicons/icons';
-import { deleteSession, getSpecificSession } from '../../hooks/sessions';
+import { getSpecificSession } from '../../../hooks/sessions';
 //import SlideToConfirm from '../../components/sliders/slideToConfirm';
 import { SwipeableButton } from "react-swipeable-button";
+import WorkoutTracker from '../../../components/workoutTracker/tracker';
 
 
 
-export default function SpecificSessionPage() {
+export default function ClientSpecificSessionPage() {
     const { sessionId } = useParams();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const weekId = queryParams.get('weekId');
+    const dayOfWeek = queryParams.get('day');
+
+    // console.log("Week ID:", weekId);
+    // console.log("Day of week:", dayOfWeek);
+    const programInfo = {
+        weekId,
+        dayOfWeek
+    }
     //const { session, loading } = useFetchSession(sessionId);
     const [session, setSession] = useState(null);
     const router = useIonRouter(); 
     const [loading, setLoading] = useState(false);
     //const [isEditMode, setIsEditMode] = useState(false);
     const swipeButtonRef = useRef();
+    const [showTrackerModal, setShowTrackerModal] = useState(false);
 
     //const [showPopover, setShowPopover] = useState(false);
 
-    const location = useLocation();
     useEffect(() => {
-        if (location.state && location.state.updatedSession) {
-            setSession(location.state.updatedSession);
-        } else {
-            async function loadSession() {
-                setLoading(true);
-                try {
-                const data = await getSpecificSession(sessionId);
-                setSession(data);  
-                } catch (error) {
-                console.error(error);
-                } finally {
-                setLoading(false);
-                }
+        const storedWorkout = localStorage.getItem('current-workout');
+        if (storedWorkout) {
+          try {
+            const parsedWorkout = JSON.parse(storedWorkout);
+            if (parsedWorkout.sessionId !== sessionId) {
+              localStorage.removeItem('current-workout');
+              console.log('Fjernet lagret økt fordi sessionId ikke stemte.');
             }
-            loadSession();
+          } catch (error) {
+            console.error('Feil ved parsing av localStorage:', error);
+          }
         }
-    }, [sessionId, location.state]);
+      }, [sessionId]);
+
+    useEffect(() => {
+        async function loadSession() {
+          setLoading(true);
+          try {
+            const data = await getSpecificSession(sessionId);
+            // Hvis location.state har programInfo, merge den med data
+            const extendedData = location.state && location.state.programInfo 
+              ? { ...data, programInfo: location.state.programInfo }
+              : data;
+            setSession(extendedData);  
+          } catch (error) {
+            console.error(error);
+          } finally {
+            setLoading(false);
+          }
+        }
+      
+        if (location.state && location.state.updatedSession) {
+          setSession(location.state.updatedSession);
+        } else {
+          loadSession();
+        }
+      }, [sessionId, location.state]);
 
 
     const exercises = session?.workout_session_exercises || session?.exercises || [];
@@ -47,39 +79,23 @@ export default function SpecificSessionPage() {
         orderCounts[ex.order] = (orderCounts[ex.order] || 0) + 1;
     });
 
-
-    const deleteSessionHandler = async (sessionId) => {
-        const confirmed = window.confirm("Er du sikker på at du vil slette økten?");
-        if (!confirmed) {
-            if (swipeButtonRef.current) {
-                swipeButtonRef.current.buttonReset();
-              }
-              return;
-        }
-        try {
-          await deleteSession(sessionId);
-          alert('Økten er slettet ❌')
-          router.push('/app/training', 'back');
-        } catch (error) {
-          console.error("Feil ved sletting:", error.message);
-        }
-      };
-
-    const redirectToEdit = (sessionId) => {
-        router.push(`/app/session/${sessionId}/edit`, 'forward');
-    }
-
+    if(session) {
     return(
         <IonPage style={{ '--padding-top': 'env(safe-area-inset-top)'  }}>
             <IonContent fullscreen >
                 <IonButton 
                 fill="clear" 
                 style={{ position: 'fixed', top: '50px', left: '0px', zIndex: 1000, color: 'white' }}
-             onClick={() => router.push('/app/training', 'back')}
+             onClick={() => router.push('/app/client/training', 'back')}
             >
             <IonIcon icon={chevronBackOutline} /> Tilbake
             </IonButton>
-            {loading && <IonSpinner />}
+            {loading && (
+                <div>
+                    <IonSpinner/>
+                    Laster...
+                </div>
+            )}
             <div className={styles.whiteBackground}>
             {session && (
                     <div>
@@ -119,7 +135,7 @@ export default function SpecificSessionPage() {
                                     <div className="col-8 ms-2">
                                         <div className={styles.exerciseDetails}>
                                         <div className={`${styles.exerciseName} overshoot `}>{name}</div>
-                                        <div className={`${styles.setInfo} sets-container`}>
+                                        <div className={`${styles.setInfo} sets-container overshoot`}>
                                             {sets.map((s, idx) => (
                                             <span key={idx}>
                                                 {s.planned_reps} reps{idx < sets.length - 1 ? ', ' : ''}
@@ -141,43 +157,48 @@ export default function SpecificSessionPage() {
                     <div className="col-12 d-flex align-items-center justify-content-between">
                         <h2>Info om økta</h2>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            {/* <IonIcon icon={timerOutline} style={{ marginRight: '0.5rem' }} />
-                            <span>{session.pause_timer} sek</span> */}
-                            {session && (
-  <>
-    <IonIcon icon={timerOutline} style={{ marginRight: '0.5rem' }} />
-    <span>{session.pause_timer} sek</span>
-  </>
-)}
+                            <IonIcon icon={timerOutline} style={{ marginRight: '0.5rem' }} />
+                            <span>{session.pause_timer} sek</span>
                         </div>
                     </div>
-                    {session && (
-                        <>
-                        <h4>Beskrivelse:</h4>
-                        <div>
-                            {session.description}
-                        </div>
-                        </>
-                    )}
-                    
+                    <h4>Beskrivelse:</h4>
+                    <div>
+                        {session.description}
+                    </div>
                 </div>
                 <div className=" d-flex flex-column align-items-center col-12">
-                    <IonButton className="col-10" onClick={() => redirectToEdit(sessionId)}>Rediger denne økten</IonButton>
-                    {/* <IonButton className="col-10" style={{ '--background' : 'lightcoral' }} onClick={() => deleteSessionHandler(sessionId)}>Slett økt</IonButton> */}
-                    {/* <SlideToConfirm label="Dra for å slette økten" onConfirm={() => deleteSessionHandler(sessionId)}/> */}
                     <div className="col-10 d-flex flex-column justify-content-center mt-2 mb-5">
                         <SwipeableButton
                             ref={swipeButtonRef}
-                            onSuccess={() => deleteSessionHandler(sessionId)}
-                            text="Sveip for å slette"
-                            text_unlocked="Slett økt"
-                            sliderColor="lightcoral"
+                            onSuccess={() => setShowTrackerModal(true)}
+                            text="Sveip for å starte økta"
+                            text_unlocked="Start økt"
+                            sliderColor="lightgreen"
                             autoWidth="true"
                         />
                     </div>
                 </div>
             </div>
+            <IonModal 
+                isOpen={showTrackerModal} 
+                onDidDismiss={() => setShowTrackerModal(false)}
+                className="straight-modal"
+                swipeToClose={false}
+                // breakpoints={[0, 1]} 
+                // initialBreakpoint={1}
+            >
+                {/* <SessionTracker 
+                    session={session} 
+                    onClose={() => setShowTrackerModal(false)} 
+                /> */}
+                <WorkoutTracker
+                    session={session}
+                    programInfo={programInfo}
+                    onClose={() => setShowTrackerModal(false)}
+                />
+            </IonModal>
             </IonContent>
         </IonPage>
     )
+    }
 }

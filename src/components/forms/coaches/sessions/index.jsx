@@ -991,7 +991,7 @@ const WorkoutSessionBuilder = () => {
           initialBreakpoint={1}
         >
           <IonContent style={{ height: '100%', overflowY: 'auto' }}>
-            <Swiper onSwiper={setSwiperInstance} allowSlidePrev allowSlideNext>
+            <Swiper onSwiper={setSwiperInstance} allowSlidePrev allowSlideNext autoHeight={true}>
               {/* Slide 1: Velg øvelse fra liste */}
               <SwiperSlide>
                 <div style={{ padding: '16px' }}>

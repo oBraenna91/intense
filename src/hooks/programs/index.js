@@ -230,3 +230,70 @@ export const usePrograms = () => {
     }
   }
   
+  export async function fetchProgramClients(programId) {
+    try {
+      const { data, error } = await supabase
+        .from('program_assignments')
+        .select(`*, clients(id, user_id, users(first_name, last_name))`)
+        .eq('program_id', programId);
+
+        if(error) throw error;
+        return data;
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  export async function addClientToProgram(programId, clientId) {
+    try {
+      const { data, error } = await supabase
+        .from('program_assignments')
+        .insert([{ program_id: programId, client_id: clientId }])
+
+        if(error) throw error;
+        return data;
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  export async function removeClientFromProgram(programId, clientId) {
+    try {
+      const { data, error } = await supabase
+        .from('program_assignments')
+        .delete()
+        .eq('program_id', programId)
+        .eq('client_id', clientId);
+
+        if(error) throw error;
+        return data;
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  export async function fetchProgramAndAssignments(userId) {
+    try {
+      const { data, error } = await supabase
+        .from('program_assignments')
+        .select(`
+            *, 
+            program:program_id (
+              id, 
+              title, 
+              duration, 
+              main_focus,
+              description,
+              cover_image,
+              program_weeks (id, week_number, description),
+              workout_cover_images ( image_url )
+          )
+        `)
+        .eq('client_id', userId)
+        .maybeSingle();
+        if(error) throw error;
+        return data;
+    } catch(error) {
+      console.error(error);
+    }
+  }

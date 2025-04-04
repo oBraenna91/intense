@@ -101,13 +101,13 @@ export default function ProgramsList() {
                     <h2 className="text-center">Dine program</h2>
                     <IonAccordionGroup>
                         <IonAccordion value="filters">
-                        <IonItem slot="header" lines="none">
+                        <IonItem slot="header" lines="none" style={{ '--background': 'var(--ion-color-light)', }} >
                             <IonLabel>Filtre</IonLabel>
                             <IonIcon icon={filterOutline} />
                         </IonItem>
 
-                        <div className="ion-padding" slot="content">
-                            <IonItem>
+                        <div className="ion-padding" slot="content" style={{ background: 'var(--ion-color-light)' }}>
+                            <IonItem style={{ '--background': 'var(--ion-color-light)', }}>
                             <IonLabel>Filtrer på hovedfokus</IonLabel>
                             <IonSelect
                                 slot="end"
@@ -123,7 +123,7 @@ export default function ProgramsList() {
                             </IonSelect>
                             </IonItem>
 
-                            <IonItem>
+                            <IonItem style={{ '--background': 'var(--ion-color-light)', }}>
                             <IonLabel>Sorter alfabetisk</IonLabel>
                             <IonSelect
                                 slot="end"
@@ -135,7 +135,7 @@ export default function ProgramsList() {
                             </IonSelect>
                             </IonItem>
 
-                            <IonItem>
+                            <IonItem style={{ '--background': 'var(--ion-color-light)', }}>
                             <IonLabel>Sorter etter opprettet dato</IonLabel>
                             <IonSelect
                                 slot="end"
@@ -158,13 +158,13 @@ export default function ProgramsList() {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <div className=" col-12 d-flex justify-content-center">
-                        <IonButton className="col-10" onClick={redirectToCreateProgram}>
+                    <div className=" col-12 d-flex justify-content-center rounded-4">
+                        <IonButton className="col-10 reg-shadow rounded-4" onClick={redirectToCreateProgram}>
                             Lag nytt program
                         </IonButton>
                     </div>
-                    <div style={{ padding: '16px'}}>
-                        <IonList>
+                    <div style={{ padding: '16px', backgroundColor: 'var(--ion-color-light)'}}>
+                        <IonList className="custom-ion-list">
                             {sortedPrograms.length > 0 ? (
                             sortedPrograms.map((program, index) => (
                                 <ProgramCards key={index} program={program} />

@@ -1,0 +1,177 @@
+.topHeader {
+    background: white;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .exerciseSwiper {
+    transition: transform 0.3s ease-out;
+  }
+  
+  .headerContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+  }
+  
+  .backButton {
+    --padding-start: 0;
+    --padding-end: 0;
+    width: 40px;
+  }
+  
+  .paginationWrapper {
+    flex: 1;
+    max-width: 60%;
+    position: relative;
+  }
+  
+  .paginationContainer {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+  }
+  
+  .paginationBullet {
+    width: 8px;
+    height: 8px;
+    background: #ddd;
+    border-radius: 50%;
+    margin: 0 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .paginationBulletActive {
+    background: var(--ion-color-primary);
+    transform: scale(1.3);
+  }
+  
+  .sessionTimer {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    
+    ion-icon {
+      margin-right: 5px;
+    }
+  }
+  
+  .exerciseName {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  
+  .setsTable {
+    background: white;
+    border-radius: 10px;
+    margin: 0 15px;
+    overflow: hidden;
+  }
+  
+  .setsHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 40px;
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+  }
+  
+  .setRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 40px;
+    padding: 12px 15px;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid #f5f5f5;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  .activeSet {
+    background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+  }
+  
+  .kgInput {
+    --padding-start: 0;
+    --padding-end: 0;
+    
+    input {
+      width: 60px;
+      margin: 0 auto;
+      text-align: center;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      padding: 8px;
+    }
+  }
+  
+  .markAllButton {
+    --color: var(--ion-color-medium);
+    margin: 15px auto;
+    font-weight: 500;
+  }
+  
+  .completeButtonContainer {
+    padding: 20px;
+    background: white;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .completeButton {
+    --border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .reviewSlide {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .reviewTitle {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.4rem;
+  }
+  
+  .ratingContainer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .starIcon {
+    font-size: 2.5rem;
+    color: var(--ion-color-warning);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  .reviewTextarea {
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    --padding-start: 15px;
+    --padding-end: 15px;
+  }
+  
+  .completeButton {
+    margin-top: auto;
+    --border-radius: 8px;
+  }

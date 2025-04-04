@@ -23,7 +23,6 @@ export default function TrainingSessions({ userId, coachId }) {
     const [sortOrder, setSortOrder] = useState('asc');
     //const [showMineOnly, setShowMineOnly] = useState(false);
     const [sortDateOrder, setSortDateOrder] = useState('newest');
-    //const [createSessionModal, setCreateSessionModal] = useState(false);
 
     useEffect(() => {
         fetchSessions();
@@ -94,31 +93,25 @@ export default function TrainingSessions({ userId, coachId }) {
     //     router.push(`/app/session/${session.id}`, 'forward');
     //   }
 
-      if(loading) {
-        return(<>Laster...</>)
-      }
     return(
-        <div>
-        {/* <Swiper onSwiper={setSwiperInstance} style={{ height: 'auto', minHeight: '100%' }}>
-        <SwiperSlide> */}
+        <div style={{ background: 'var(--ion-color-light)' }}>
             <div className="d-flex justify-content-center"><h2>Dine treningsøkter</h2></div>
+            {loading && (
+              <div>Laster...</div>
+            )}
             <IonAccordionGroup>
             <IonAccordion value="filters">
-              <IonItem slot="header" lines="none" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <IonItem slot="header" lines="none" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                 <IonLabel>Filtre</IonLabel>
                 <IonIcon icon={filterOutline} />
               </IonItem>
-              <div className="ion-padding" slot="content">
-                  {/* <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <IonLabel>Vis kun mine økter</IonLabel>
-                    <IonToggle slot="end" checked={showMineOnly} onIonChange={e => setShowMineOnly(e.detail.checked)} />
-                  </IonItem> */}
-                <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div className="ion-padding" slot="content" style={{ background: 'var(--ion-color-light)' }}>
+                <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                   <IonLabel>Filtrer på hovedfokus</IonLabel>
                   <MuscleSelect selectedMuscle={selectedMuscle} setSelectedMuscle={setSelectedMuscle} />
                 </IonItem>
                 <IonItem
-                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                   <IonLabel>Sorter alfabetisk</IonLabel>
                   <IonSelect
                     slot="end"
@@ -131,7 +124,7 @@ export default function TrainingSessions({ userId, coachId }) {
                     <IonSelectOption value="desc">Å - A</IonSelectOption>
                   </IonSelect>
                 </IonItem>
-                <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                   <IonLabel>Sorter etter opprettet dato</IonLabel>
                   <IonSelect
                     slot="end"
@@ -155,13 +148,14 @@ export default function TrainingSessions({ userId, coachId }) {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="col-12 d-flex justify-content-center">
-          <IonButton className="col-10" onClick={redirectToCreateSession}>
+          <div className="col-12 d-flex justify-content-center rounded-4">
+          <IonButton className="col-10 reg-shadow rounded-4" onClick={redirectToCreateSession}
+          style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2)' }}>
               Lag ny økt
             </IonButton>
           </div>
-          <div style={{ padding: '16px' }}>
-            <IonList>
+          <div style={{ padding: '16px', background: 'var(--ion-color-light)' }}>
+            <IonList className="custom-ion-list">
               {sortedSessions.length > 0 ? (
                 sortedSessions.map((session, index) => (
                   <SessionCards key={index} session={session} />
@@ -178,19 +172,6 @@ export default function TrainingSessions({ userId, coachId }) {
             }
             </IonList>
           </div>
-        {/* </SwiperSlide>
-        <IonModal
-            isOpen={createSessionModal}
-            onDidDismiss={() => setCreateSessionModal(false)}
-            breakpoints={[0, 1]} 
-            initialBreakpoint={1} 
-            cssClass="straight-modal"
-        >
-            <div className="modal-content">
-                <WorkoutSessionBuilder userId={userId} onSessionCreated={handleSessionCreated}  onBack={() => swiperInstance?.slideTo(0)} />
-            </div>
-        </IonModal>
-      </Swiper> */}
         </div>
     )
 }

@@ -1157,7 +1157,7 @@ const WorkoutSessionEditer = ({ initialSession, onBack }) => {
           initialBreakpoint={0.9}
         >
           <IonContent style={{ height: '100%', overflowY: 'auto' }}>
-            <Swiper onSwiper={setSwiperInstance} allowSlidePrev={true} allowSlideNext={true}>
+            <Swiper onSwiper={setSwiperInstance} allowSlidePrev={true} allowSlideNext={true} autoHeight={true}>
               <SwiperSlide>
                 <div style={{ padding: '16px' }}>
                   <IonSearchbar
