@@ -1,9 +1,10 @@
 import { IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon} from '@ionic/react';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+//import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import React from 'react';
 import HomePage from '../../pages/home';
-import { Redirect, Route } from 'react-router-dom/cjs/react-router-dom.min';
+//import { Redirect, Route } from 'react-router-dom/cjs/react-router-dom.min';
 import { home, heart, barbell } from 'ionicons/icons';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import SpecificExercisePage from '../specificExercise';
 import LogoutPage from '../logout';
 import TrainingTabs from '../coach/training';
@@ -41,7 +42,22 @@ export default function Tabs() {
     return(
         <IonTabs>
             <IonRouterOutlet>
-                {profile?.role === 'coach' ? (
+                        <Route exact path="/app/home" component={HomePage}/>
+                        <Route exact path="/app/exercise/:exerciseId" component={SpecificExercisePage}/>
+                        <Route exact path="/app/logout" component={LogoutPage} />
+                        <Route exact path="/app/training" component={TrainingTabs} />
+                        <Route exact path="/app/session/:sessionId" component={SpecificSessionPage} />
+                        <Route exact path="/app/session/:sessionId/edit" component={UpdateSessionPage} />
+                        <Route exact path="/app/create-session" component={WorkoutSessionBuilder} />
+                        <Route exact path="/app/create-program" component={ProgramBuilder} />
+                        <Route exact path="/app/program/:programId" component={SpecificProgramPage} />
+                        <Route exact path="/app/program/:programId/edit" component={EditProgramPage} />
+                        <Route exact path="/app/client/session/:sessionId" component={ClientSpecificSessionPage} />
+                        <Route exact path="/app/client/training" component={ClientTrainingTabs} />
+                        <Route exact path="/app/client/exercise/:exerciseId" component={SpecificExercisePage}/>
+                        <Route exact path="/app/client/home" component={HomePage} />
+                        <Route exact path="/app/client/logout" component={LogoutPage} />
+                {/* {profile?.role === 'coach' ? (
                     <>
                         <Route exact path="/app/home" component={HomePage}/>
                         <Route exact path="/app/exercise/:exerciseId" component={SpecificExercisePage}/>
@@ -69,9 +85,34 @@ export default function Tabs() {
                     ): (
                         <Redirect to="/app/client/home"/>
                     )}
+                </Route> */}
+                <Route exact path="/app">
+                    <Redirect to={profile?.role === 'coach' ? "/app/home" : "/app/client/home"} />
                 </Route>
             </IonRouterOutlet>
-            {
+            <IonTabBar translucent={true} slot="bottom" style={{ display: shouldHideTabBar ? 'none' : 'flex' }}>
+                <IonTabButton tab="home" href={profile?.role === 'coach' ? "/app/home" : "/app/client/home"}>
+                    <IonIcon src={home} />
+                </IonTabButton>
+                <IonTabButton tab="training" href={profile?.role === 'coach' ? "/app/training" : "/app/client/training"}>
+                    <IonIcon src={barbell} />
+                </IonTabButton>
+                <IonTabButton tab="logout" href={profile?.role === 'coach' ? "/app/logout" : "/app/client/logout"}>
+                    <IonIcon src={heart} />
+                </IonTabButton>
+            </IonTabBar>
+                {/* <IonTabBar translucent={true} slot="bottom" style={{ display: shouldHideTabBar ? 'none' : 'flex' }}>
+                    <IonTabButton tab="home" href="/app/home">
+                        <IonIcon src={home} />
+                        </IonTabButton>
+                        <IonTabButton tab="training" href="/app/training">
+                            <IonIcon src={barbell} />
+                        </IonTabButton>
+                        <IonTabButton tab="logout" href="/app/logout">
+                            <IonIcon src={heart} />
+                    </IonTabButton>
+                </IonTabBar> */}
+            {/* {
                 profile?.role === 'coach' ? (
                     <IonTabBar translucent={true} slot="bottom" style={{ display: shouldHideTabBar ? 'none' : 'flex' }}>
                         <IonTabButton tab="home" href="/app/home">
@@ -97,7 +138,7 @@ export default function Tabs() {
                         </IonTabButton>
                     </IonTabBar>
                 )
-            }
+            } */}
         </IonTabs>
     )
 }

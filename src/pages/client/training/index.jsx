@@ -23,7 +23,9 @@ const ClientTrainingTabs = () => {
     touchRatio: 0,       
     simulateTouch: false,
     observer: true,            
-    observeParents: true 
+    observeParents: true,
+    autoHeight: true, // Legg til denne
+    updateOnWindowResize: true
   };
 
   const goToSlide = (index) => {
@@ -36,6 +38,7 @@ const ClientTrainingTabs = () => {
     if (swiperRef.current) {
       setTimeout(() => {
         swiperRef.current.update();
+        swiperRef.current.updateAutoHeight();
       }, 100);
     }
   });
@@ -64,7 +67,12 @@ const ClientTrainingTabs = () => {
       try {
         const response= await fetchProgramAndAssignments(client.id);
         setProgram(response);
-        console.log(response);
+        if (swiperRef.current) {
+          setTimeout(() => {
+            swiperRef.current.update();
+            swiperRef.current.updateAutoHeight();
+          }, 100);
+        }
       } catch(error) {
         console.error(error);
       } finally {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 //import WorkoutSessionBuilder from '../../forms/coaches/sessions';
 import { getTrainingSessions } from '../../../hooks/sessions';
 import { IonAccordion, IonAccordionGroup, IonButton, IonIcon, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, useIonRouter, useIonViewWillEnter, 
@@ -15,6 +15,7 @@ export default function TrainingSessions({ userId, coachId }) {
 
     const [sessions, setSessions] = useState([]);
     //const [swiperInstance, setSwiperInstance] = useState(null);
+    //eslint-disable-next-line
     const [loading, setLoading] = useState(false);
     const router = useIonRouter();
 
@@ -24,22 +25,22 @@ export default function TrainingSessions({ userId, coachId }) {
     //const [showMineOnly, setShowMineOnly] = useState(false);
     const [sortDateOrder, setSortDateOrder] = useState('newest');
 
-    useEffect(() => {
-        fetchSessions();
-        //eslint-disable-next-line
-      }, [userId]);
+    // useEffect(() => {
+    //     fetchSessions();
+    //     //eslint-disable-next-line
+    //   }, [userId]);
     
-      const fetchSessions = async () => {
-        setLoading(true);
-        try {
-          const data = await getTrainingSessions(coachId);
-          setSessions(data);
-        } catch (error) {
-          console.error('Feil ved henting av treningsøkter:', error.message);
-        } finally {
-            setLoading(false);
-        }
-      };
+    //   const fetchSessions = async () => {
+    //     setLoading(true);
+    //     try {
+    //       const data = await getTrainingSessions(coachId);
+    //       setSessions(data);
+    //     } catch (error) {
+    //       console.error('Feil ved henting av treningsøkter:', error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    //   };
 
       useIonViewWillEnter(() => {
         async function fetchAgain() {
