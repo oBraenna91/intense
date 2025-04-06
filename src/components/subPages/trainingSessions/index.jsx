@@ -10,8 +10,17 @@ import SessionCards from '../../cards/sessions';
 import MuscleSelect from '../../lists/muscles';
 import { filterOutline } from 'ionicons/icons';
 import styles from './styles.module.scss';
+import { useAuth } from '../../../contexts/auth';
 
-export default function TrainingSessions({ userId, coachId }) {
+export default function TrainingSessions() {
+
+  const { user, coach } = useAuth();
+
+  //eslint-disable-next-line
+  const userId = user.id;
+
+  const coachId = coach.id;
+
 
     const [sessions, setSessions] = useState([]);
     //const [swiperInstance, setSwiperInstance] = useState(null);

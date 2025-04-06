@@ -1,0 +1,7 @@
+"scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "build_ios": "npm run build && npx cap copy ios && npx cap sync ios"
+  },

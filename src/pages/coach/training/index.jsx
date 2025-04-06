@@ -76,15 +76,10 @@ const TrainingTabs = () => {
               <ProgramsList />
             </div>
           </SwiperSlide>
-          {/* <SwiperSlide>
-            <div style={{ background: 'var(--ion-color-light)' }}>
-              <TrainingSessions userId={user.id} coachId={coach.id}/>
-            </div>
-          </SwiperSlide> */}
           <SwiperSlide>
             <div style={{ background: 'var(--ion-color-light)' }}>
               {user?.id && coach?.id ? (
-                <TrainingSessions userId={user.id} coachId={coach.id} />
+                <TrainingSessions />
               ) : (
                 <p>Laster økter...</p>
               )}

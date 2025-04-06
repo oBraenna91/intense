@@ -43,26 +43,10 @@ const ClientTrainingTabs = () => {
     }
   });
 
-  // useEffect(() => {
-  //         async function getProgram() {
-  //             setIsLoading(true);
-  //             try{
-  //                 const response = await fetchProgramAndAssignments(client.id);
-  //                 //console.log(response);
-  //                 setProgram(response);
-  //             } catch(error) {
-  //                 console.error(error);
-  //             } finally {
-  //                 setIsLoading(false);
-  //             }
-  //         }
-  //         if (client && client.id) {
-  //           getProgram();
-  //         }
-  //     }, [client]);
-
   useEffect(() => {
     async function getPrograms(){
+      if(!client) return;
+
       setIsLoading(true);
       try {
         const response= await fetchProgramAndAssignments(client.id);
@@ -80,7 +64,7 @@ const ClientTrainingTabs = () => {
       }
     }
     getPrograms();
-  }, [client.id])
+  }, [client])
 
 
   const handleSegmentChange = (e) => {

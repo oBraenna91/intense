@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const fetchProfile = async (currentUser) => {
     if (currentUser) {
@@ -51,15 +52,26 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const getSessionAndProfile = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      if (currentUser) {
-        await fetchProfile(currentUser);
-        await fetchCoachProfile(currentUser);
-        await fetchClientProfile(currentUser);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        if (currentUser) {
+          // await fetchProfile(currentUser);
+          // await fetchCoachProfile(currentUser);
+          // await fetchClientProfile(currentUser);
+          await Promise.all([
+            fetchProfile(currentUser),
+            fetchCoachProfile(currentUser),
+            fetchClientProfile(currentUser)
+          ]);
+        }
+      } catch(error) {
+        console.error(error);
+      } finally {
+        setIsInitialized(true);
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getSessionAndProfile();
@@ -79,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   }, [user?.id]);
 
   return (
-    <AuthContext.Provider value={{ user, profile, coach, client, loading, fetchProfile }}>
+    <AuthContext.Provider value={{ user, profile, coach, client, loading: loading || !isInitialized, fetchProfile }}>
       {children}
     </AuthContext.Provider>
   );
