@@ -7,7 +7,7 @@ import TaskCard from '../../cards/tasks';
 import { checkmark, close } from 'ionicons/icons';
 
 export default function ClientProgramOverView({ program, updateSlideHeight }) {
-  
+
   const { user, client } = useAuth();
   const [activities, setActivities] = useState([]);
   const [workoutDetails, setWorkoutDetails] = useState({});
@@ -169,42 +169,6 @@ export default function ClientProgramOverView({ program, updateSlideHeight }) {
 
   const sessions = Object.values(workoutDetails).map(detail => detail.session);
 
-  // if (!program.start_date) {
-    
-  //   return (
-  //       <div>
-  //           <h2 className="text-center">Uke{currentWeek}, Dag {currentDay}   💪🏽</h2>
-  //           <div className="ion-padding">
-  //           {sessions.map(session => { 
-  //             const extendedSession = session ? {
-  //               ...session,
-  //               programInfo: {
-  //                 currentDay,
-  //                 currentWeek,
-  //                 currentWeekRecord,
-  //                 dayOfWeek
-  //               },
-  //             }
-  //             : null;
-  //             return(
-  //               <ClientSessionCards key={session.id} session={extendedSession} />
-  //           )})}
-  //           {activities.map(activity => (
-  //               activity.activity_type === 'task' && (
-  //                   <TaskCard task={activity} key={activity.id} />
-  //               )
-  //           ))}
-  //           <div className="col-12 d-flex justify-content-center">
-  //           <IonButton className="col-10" onClick={handleStartProgram} disabled={starting}>
-  //               {starting ? "Starter..." : "Start Program"}
-  //           </IonButton>
-  //           </div>
-            
-  //       </div>
-  //       </div>
-  //   );
-  // }
-
   return (
     <div>
         <h2 className="text-center">Uke{currentWeek}, Dag {currentDay}   💪🏽</h2>
@@ -243,11 +207,6 @@ export default function ClientProgramOverView({ program, updateSlideHeight }) {
     />
   )
 ))}
-      {/* <div className="col-12 d-flex justify-content-center">
-        <IonButton className="col-10" >
-            Gå til dagens økt
-        </IonButton>
-      </div> */}
     </div>
     <IonModal breakpoints={[0.7, 1]} initialBreakpoint={0.7} isOpen={showTaskModal} onDidDismiss={() => setShowTaskModal(false)}>
           <IonHeader>
