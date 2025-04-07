@@ -7,6 +7,7 @@ import TaskCard from '../../cards/tasks';
 import { checkmark, close } from 'ionicons/icons';
 
 export default function ClientProgramOverView({ program, updateSlideHeight }) {
+  
   const { user, client } = useAuth();
   const [activities, setActivities] = useState([]);
   const [workoutDetails, setWorkoutDetails] = useState({});
