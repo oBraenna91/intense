@@ -742,6 +742,8 @@ const WorkoutSessionEditer = ({ initialSession, onBack }) => {
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [selectedCoverImage, setSelectedCoverImage] = useState(null);
   const [mainFocus, setMainFocus] = useState('');
+  const [estimatedDuration, setEstimatedDuration] = useState('');
+  const [difficulty, setDifficulty] = useState('');
   
   // Modal-håndtering og filtrering
   const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
@@ -792,6 +794,8 @@ const WorkoutSessionEditer = ({ initialSession, onBack }) => {
       setSessionName(initialSession.title || '');
       setSessionDescription(initialSession.description || '');
       setMainFocus(initialSession.main_focus || '');
+      setDifficulty(initialSession.difficulty || '');
+      setEstimatedDuration(initialSession.estimated_duration || '');
       
       // Flatten exercises
       if (initialSession.workout_session_exercises) {
@@ -895,7 +899,9 @@ const WorkoutSessionEditer = ({ initialSession, onBack }) => {
       description: sessionDescription,
       exercises: workoutSessionExercises,
       cover_image: selectedCoverImage,
-      main_focus: mainFocus
+      main_focus: mainFocus,
+      difficulty,
+      estimated_duration: estimatedDuration
     };
     try {
       await updateWorkoutSession(initialSession.id, sessionData);
@@ -916,7 +922,9 @@ const WorkoutSessionEditer = ({ initialSession, onBack }) => {
       exercises: workoutSessionExercises,
       cover_image: selectedCoverImage,
       created_by: coach?.id,
-      main_focus: mainFocus
+      main_focus: mainFocus,
+      difficulty,
+      estimated_duration: estimatedDuration
     };
     try {
       const newSessionId = await createWorkoutSession(sessionData);

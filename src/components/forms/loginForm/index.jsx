@@ -27,7 +27,6 @@ export default function LoginForm() {
         alert('You are now logged in!')
       router.push('/app', 'forward');
     }
-
     setLoading(false);
   };
 

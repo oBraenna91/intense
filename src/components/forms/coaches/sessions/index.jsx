@@ -598,6 +598,8 @@ const WorkoutSessionBuilder = () => {
   const [sessionName, setSessionName] = useState('');
   const [sessionDescription, setSessionDescription] = useState('');
   const [mainFocus, setMainFocus] = useState('');
+  const [difficulty, setDifficulty] = useState('');
+  const [estimatedDuration, setEstimatedDuration] = useState('');
 
   // Valgte øvelser i selve økta
   const [selectedExercises, setSelectedExercises] = useState([]);
@@ -758,6 +760,8 @@ const WorkoutSessionBuilder = () => {
       created_by: coach?.id,
       main_focus: mainFocus,
       pause_timer: pause,
+      estimated_duration: estimatedDuration,
+      difficulty: difficulty,
     };
     try {
       const workoutSessionId = await createWorkoutSession(sessionData);
@@ -967,6 +971,24 @@ const WorkoutSessionBuilder = () => {
                 </div>
                 <PauseCircularInput seconds={pause} onChange={setPause} />
             </div>
+        </IonItem>
+
+        <IonItem>
+          <IonLabel position="stacked">Estimert varighet</IonLabel>
+          <IonInput 
+            value={estimatedDuration} 
+            placeholder="Hvor lang ish er økta?" 
+            onIonChange={e => setEstimatedDuration(e.detail.value)} 
+          />
+        </IonItem>
+
+        <IonItem>
+          <IonLabel position="stacked">Vanskelighetsgrad</IonLabel>
+          <IonInput 
+            value={difficulty} 
+            placeholder="Hvilken vanskelighetsgrad er denne økta?" 
+            onIonChange={e => setDifficulty(e.detail.value)} 
+          />
         </IonItem>
 
         {/* Lagre økta */}

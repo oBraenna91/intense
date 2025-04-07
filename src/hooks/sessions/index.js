@@ -2,12 +2,12 @@ import { supabase } from "../../supabaseClient";
 import { useState, useCallback, useEffect } from 'react';
 
 export const createWorkoutSession = async (sessionData) => {
-    const { title, description, exercises, created_by, cover_image, main_focus, pause_timer } = sessionData;
+    const { title, description, exercises, created_by, cover_image, main_focus, pause_timer, estimated_duration, difficulty } = sessionData;
     try {
       
       const { data: sessionDataRes, error: sessionError } = await supabase
         .from('workout_sessions')
-        .insert([{ title, description, created_by, cover_image, main_focus, pause_timer }])
+        .insert([{ title, description, created_by, cover_image, main_focus, pause_timer, estimated_duration, difficulty }])
         .select(); 
   
       if (sessionError) throw sessionError;
@@ -174,7 +174,9 @@ export const createWorkoutSession = async (sessionData) => {
         description: data.description, 
         main_focus: data.main_focus,
         cover_image: data.cover_image,
-        pause_timer: data.pause_timer
+        pause_timer: data.pause_timer,
+        difficulty: data.difficulty,
+        estimated_duration: data.estimated_duration
       })
       .match({ id: sessionId });
     

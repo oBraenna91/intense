@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../contexts/auth';
 import { supabase } from '../../../supabaseClient';
-import { IonAlert, IonButton, IonButtons, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonContent, IonHeader, IonIcon, IonModal, IonTitle, IonToolbar } from '@ionic/react';
 import ClientSessionCards from '../../cards/sessions/clientSessionCard';
 import TaskCard from '../../cards/tasks';
 import { checkmark, close } from 'ionicons/icons';
 
-export default function ClientProgramOverView({ program }) {
+export default function ClientProgramOverView({ program, updateSlideHeight }) {
   const { user, client } = useAuth();
   const [activities, setActivities] = useState([]);
   const [workoutDetails, setWorkoutDetails] = useState({});
@@ -84,58 +84,6 @@ export default function ClientProgramOverView({ program }) {
     setSelectedTask(null);
   };
 
-  // useEffect(() => {
-  //   async function fetchActivities() {
-  //     if (!currentWeekRecord || client?.id) return;
-  //     const { data, error } = await supabase
-  //       .from('program_activities')
-  //       .select(`*,
-  //           activity_progress!inner(
-  //             is_completed
-  //           )
-  //         `)
-  //       .eq('program_week_id', currentWeekRecord.id)
-  //       .eq('day_number', dayOfWeek);
-  //     if (error) {
-  //       console.error('Error fetching activities:', error);
-  //       return;
-  //     }
-  //     setActivities(data);
-
-  //     data.forEach(async (activity) => {
-  //       if (activity.activity_type === 'workout' && activity.workout_session_id) {
-  //         const { data: workoutData, error: workoutError } = await supabase
-  //           .from('workout_sessions')
-  //           .select(`
-  //             title,
-  //             main_focus,
-  //             workout_cover_images ( image_url )
-  //           `)
-  //           .eq('id', activity.workout_session_id)
-  //           .single();
-  //         if (workoutError) {
-  //           console.error('Error fetching workout session:', workoutError);
-  //           return;
-  //         }
-  //         setWorkoutDetails(prev => ({
-  //           ...prev,
-  //           [activity.workout_session_id]: {
-  //             session: {
-  //               id: activity.workout_session_id,
-  //               title: workoutData.title,
-  //               main_focus: workoutData.main_focus,
-  //               workout_cover_images: workoutData.workout_cover_images 
-  //                 ? [workoutData.workout_cover_images.image_url] 
-  //                 : [],
-  //             }
-  //           },
-  //         }));
-  //       }
-  //     });
-  //   }
-  //   fetchActivities();
-  // }, [currentWeekRecord, dayOfWeek, client.id]);
-
   useEffect(() => {
   
     async function fetchActivities() {
@@ -205,6 +153,10 @@ export default function ClientProgramOverView({ program }) {
   
         setActivities(activitiesData);
         setWorkoutDetails(workoutDetails);
+
+        if (updateSlideHeight) {
+          updateSlideHeight();
+        }
   
       } catch (error) {
         console.error('Error fetching activities:', error);
@@ -212,7 +164,7 @@ export default function ClientProgramOverView({ program }) {
     }
   
     fetchActivities();
-  }, [currentWeekRecord, dayOfWeek, user?.id]);
+  }, [currentWeekRecord, dayOfWeek, user?.id, updateSlideHeight]);
 
   const sessions = Object.values(workoutDetails).map(detail => detail.session);
 
@@ -296,18 +248,13 @@ export default function ClientProgramOverView({ program }) {
         </IonButton>
       </div> */}
     </div>
-    <IonModal breakpoints={[0.5, 0.7]} initialBreakpoint={1} isOpen={showTaskModal} onDidDismiss={() => setShowTaskModal(false)}>
+    <IonModal breakpoints={[0.7, 1]} initialBreakpoint={0.7} isOpen={showTaskModal} onDidDismiss={() => setShowTaskModal(false)}>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Oppgave</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => setShowTaskModal(false)}>
-                  <IonIcon icon={close} />
-                </IonButton>
-              </IonButtons>
+              <IonTitle className="text-center py-3">Oppgave</IonTitle>
             </IonToolbar>
           </IonHeader>
-          <div className="ion-padding">
+          <IonContent className="ion-padding">
             <h2>{selectedTask?.task_title}</h2>
             <p>{selectedTask?.task_description}</p>
             <div className="ion-text-center ion-margin-top">
@@ -318,7 +265,7 @@ export default function ClientProgramOverView({ program }) {
                 <IonIcon slot="start" icon={checkmark} />
                 Marker som fullført
               </IonButton>
-              {progress[selectedTask?.id]?.is_completed && (
+              {progress[selectedTask?.id]?.isDone && (
                 <IonButton 
                   color="danger" 
                   onClick={() => setShowAlert(true)}
@@ -328,7 +275,7 @@ export default function ClientProgramOverView({ program }) {
                 </IonButton>
               )}
             </div>
-          </div>
+          </IonContent>
         </IonModal>
         <IonAlert
           isOpen={showAlert}

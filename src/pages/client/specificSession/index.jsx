@@ -2,7 +2,7 @@ import { IonButton,  IonContent, IonIcon,  IonPage, IonSpinner, useIonRouter, Io
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import styles from './styles.module.scss';
-import { chevronBackOutline, timerOutline } from 'ionicons/icons';
+import { chevronBackOutline, stopwatchOutline, timerOutline } from 'ionicons/icons';
 import { getSpecificSession } from '../../../hooks/sessions';
 //import SlideToConfirm from '../../components/sliders/slideToConfirm';
 import { SwipeableButton } from "react-swipeable-button";
@@ -153,18 +153,34 @@ export default function ClientSpecificSessionPage() {
                         </div>
                     </div>
                 )}
-                <div className="reg-pad">
-                    <div className="col-12 d-flex align-items-center justify-content-between">
-                        <h2>Info om økta</h2>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <IonIcon icon={timerOutline} style={{ marginRight: '0.5rem' }} />
-                            <span>{session.pause_timer} sek</span>
+                <div className={`reg-pad`}>
+                    <div className={`col-12 d-flex flex-column align-items-center justify-content-center ${styles.background} reg-shadow rounded-3 p-2 pb-4`}>
+                        <h2 className="text-center">Info om økta</h2>
+                        {session && (
+                            <div className="d-flex col-11 m-auto justify-content-between">
+                                <div className={`d-flex flex-column align-items-center ${styles.iconContainer}`}>
+                                <IonIcon icon={stopwatchOutline} style={{ fontSize: '24px' }} />
+                                <div className={styles.iconText}>{session.estimated_duration}</div>
+                                </div>
+                                <div className={`d-flex flex-column align-items-center ${styles.iconContainer}`}>
+                                <IonIcon icon={timerOutline} style={{ fontSize: '24px' }} />
+                                <div className={styles.iconText}>{session.pause_timer} sek</div>
+                                </div>
+                                <div className={`d-flex flex-column align-items-center ${styles.iconContainer}`}>
+                                <div style={{ fontSize: '24px' }}>💪🏽</div>
+                                <div className={styles.iconText}>{session.difficulty}</div>
+                                </div>
+                            </div>
+                            )}
+                    </div>
+                    {session && (
+                        <>
+                        <h4 className="text-center mt-5">Beskrivelse:</h4>
+                        <div>
+                            {session.description}
                         </div>
-                    </div>
-                    <h4>Beskrivelse:</h4>
-                    <div>
-                        {session.description}
-                    </div>
+                        </>
+                    )}
                 </div>
                 <div className=" d-flex flex-column align-items-center col-12">
                     <div className="col-10 d-flex flex-column justify-content-center mt-2 mb-5">

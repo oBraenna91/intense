@@ -493,7 +493,7 @@ import { IonBackButton, IonButton, IonButtons, IonCol, IonContent, IonGrid, IonH
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { useIonRouter } from '@ionic/react';
-import { trashOutline } from 'ionicons/icons';
+import { trashOutline, stopwatchOutline } from 'ionicons/icons';
 import { useExercises } from '../../../hooks/exercises';
 import { useAuth } from '../../../contexts/auth';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -534,6 +534,8 @@ export default function UpdateSessionPage() {
   // Local states for form fields
   const [sessionName, setSessionName] = useState('');
   const [sessionDescription, setSessionDescription] = useState('');
+  const [difficulty, setDifficulty] = useState('');
+  const [estimatedDuration, setEstimatedDuration] = useState('');
   const [mainFocus, setMainFocus] = useState('');
   const [selectedExercises, setSelectedExercises] = useState([]);
   const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
@@ -570,6 +572,8 @@ export default function UpdateSessionPage() {
         setSessionDescription(data?.description || '');
         setMainFocus(data?.main_focus || '');
         setPause(data.pause_timer);
+        setDifficulty(data.difficulty || '');
+        setEstimatedDuration(data.estimated_duration || '');
 
         setSelectedCoverImage(data?.cover_image?.id || null);
 
@@ -722,7 +726,9 @@ export default function UpdateSessionPage() {
       cover_image: selectedCoverImage,
       main_focus: mainFocus,
       pause_timer: pause,
-      exercises: selectedExercises
+      exercises: selectedExercises,
+      difficulty,
+      estimated_duration: estimatedDuration
     };
 
     const updatedDataWithImage = {
@@ -839,6 +845,26 @@ export default function UpdateSessionPage() {
             <PauseCircularInput seconds={pause} onChange={setPause} />
             {/* <PauseCircularSlider value={pause} onChange={setPause} /> */}
           </div>
+        </IonItem>
+
+        <IonItem>
+          <IonLabel position="stacked">Estimert varighet</IonLabel>
+          <IonIcon icon={stopwatchOutline}/>
+          <IonInput
+            placeholder="Hvor lang er økten?"
+            value={estimatedDuration}
+            onIonInput={e => setEstimatedDuration(e.detail.value)}
+          />
+        </IonItem>
+
+        <IonItem>
+          <IonLabel position="stacked">Vanskelighetsgrad</IonLabel>
+          <div>💪🏽</div>
+          <IonInput
+            placeholder="Hvilken vanskelighetsgrad er økten?"
+            value={difficulty}
+            onIonInput={e => setDifficulty(e.detail.value)}
+          />
         </IonItem>
 
         <div className="d-flex flex-column align-items-center" style={{ marginTop: '24px' }}>

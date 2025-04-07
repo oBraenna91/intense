@@ -43,6 +43,12 @@ const ClientTrainingTabs = () => {
     }
   });
 
+  const updateSlideHeight = () => {
+    if (swiperRef.current) {
+      swiperRef.current.updateAutoHeight();
+    }
+  };
+
   useEffect(() => {
     async function getPrograms(){
       if(!client) return;
@@ -106,9 +112,9 @@ const ClientTrainingTabs = () => {
           onSwiper={(swiper) => { swiperRef.current = swiper; }}
           autoHeight={true}
         >
-          <SwiperSlide>
+          <SwiperSlide key={program?.id || 'empty'}>
             <div style={{ background: 'var(--ion-color-light)' }}>
-              <ClientProgramOverView program={program} />
+              <ClientProgramOverView program={program} updateSlideHeight={updateSlideHeight} />
             </div>
           </SwiperSlide>
           <SwiperSlide>
