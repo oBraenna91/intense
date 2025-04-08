@@ -17,24 +17,6 @@ export default function ProgramsList() {
     const [sortOrder, setSortOrder] = useState('asc');
     const [sortDateOrder, setSortDateOrder] = useState('newest');
 
-    // useEffect(() => {
-
-    //     async function fetchProgs() {
-    //         try {
-    //             const response = await fetchPrograms(user.id);
-    //             const newProgram = location.state?.newProgram;
-    //             if (newProgram) {
-    //                 setPrograms([newProgram, ...response]);
-    //             } else {
-    //                 setPrograms(response);
-    //             }
-    //         } catch(error) {
-    //             console.error(error);
-    //         }
-    //     }
-    //     fetchProgs();
-    // },[user.id, location.state])
-
     useEffect(() => {
         async function fetchProgs() {
             try {

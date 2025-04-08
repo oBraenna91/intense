@@ -61,7 +61,6 @@ const ExerciseEditForm = ({ exercise, onClose, onExerciseUpdated, userId }) => {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = fileName;
-    // Last opp bildet
     //eslint-disable-next-line
     const { data, error } = await supabase.storage
       .from('exercise-images')
@@ -92,7 +91,6 @@ const ExerciseEditForm = ({ exercise, onClose, onExerciseUpdated, userId }) => {
     setLoading(true);
     setError(null);
     try {
-      // Oppdater øvelsen i databasen
       const { data, error } = await supabase
         .from('exercises')
         .update({

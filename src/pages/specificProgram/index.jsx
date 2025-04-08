@@ -27,7 +27,6 @@ export default function SpecificProgramPage() {
                 const response = await getSpecificProgram(programId);
                 setProgram(response);
                 const clientData = await fetchClients(coach.id)
-                //console.log(clientData);
                 setClients(clientData)
 
                 const assigned = await fetchProgramClients(programId);
@@ -131,7 +130,6 @@ export default function SpecificProgramPage() {
                                         transform: isOpen ? 'rotate(540deg)' : 'rotate(0deg)'
                                         }}
                                     />
-                                    {/* <div style={{ fontSize: '0.85em', color: '#888' }}>{week.description}</div> */}
                                 </IonLabel>
                                 <AnimatePresence>
                                     {openWeekId === week.id && (

@@ -6,7 +6,6 @@ import { IonPage, IonContent,
 } from '@ionic/react';
 
 const SetupUserPage = () => {
-  //const router = useIonRouter();
 
   return (
     <IonPage>
@@ -27,7 +26,7 @@ const SetupUserPage = () => {
           console.error('Feil ved oppretting av bruker:', error);
         } else {
           console.log('Bruker opprettet:', userEntry);
-          alert('User updated! You can always change this information in the settings page.')
+          alert('Bruker opprettet! Du kan alltid endre denne informasjonen på "innstillinger"-siden.')
           //router.push('/app', 'forward');
           window.location.reload();
         }

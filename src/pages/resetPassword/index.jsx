@@ -10,7 +10,7 @@ export default function ResetPasswordPage() {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/login" />
                     </IonButtons>
-                    <IonTitle>Forgot Password</IonTitle>
+                    <IonTitle>Glemt passord</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent>

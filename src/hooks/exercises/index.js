@@ -6,46 +6,6 @@ export const useExercises = (userId) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-//   const fetchExercises = async () => {
-//     setLoading(true);
-//     try {
-//       const { data, error } = await supabase
-//         .from('exercises')
-//         .select('*')
-//         .or(`created_by.is.null, created_by.eq.${userId}`);
-//       if (error) throw error;
-//       setExercises(data);
-//     } catch (err) {
-//       setError(err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-// const fetchExercises = async () => {
-//     setLoading(true);
-//     try {
-//       const { data, error } = await supabase
-//         .from('exercises')
-//         .select(`
-//           *,
-//           exercise_muscles (
-//             muscles_id,
-//             muscles (
-//               name
-//             )
-//           )
-//         `)
-//         .or(`created_by.is.null, created_by.eq.${userId}`);
-//       if (error) throw error;
-//       setExercises(data);
-//     } catch (err) {
-//       setError(err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
 const fetchExercises = useCallback(async () => {
   setLoading(true);
   try {
@@ -68,9 +28,8 @@ const fetchExercises = useCallback(async () => {
   } finally {
     setLoading(false);
   }
-}, [userId]); // Avhengighet: kun kjør på nytt når userId endres
+}, [userId]); 
 
-// Kall fetchExercises én gang når userId er tilgjengelig
 useEffect(() => {
   if (userId) {
     fetchExercises();

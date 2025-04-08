@@ -45,7 +45,7 @@ export default function UpdatePassword() {
     if (error) {
       setError(error.message);
     } else {
-      setMessage('Password updated - redirecting to login-page');
+      setMessage('Passord oppdatert - sender deg til innloggings-siden...');
       setTimeout(() => router.push('/login', 'forward'), 3000);
     }
 
@@ -54,23 +54,23 @@ export default function UpdatePassword() {
 
   return (
     <div className="update-password-container">
-      <h1 className="text-center my-5">Update password</h1>
+      <h1 className="text-center my-5">Oppdater passord</h1>
       <form className="qute-form col-10 m-auto" onSubmit={handleUpdatePassword}>
         <div className="label-input-container">
-          <label className="label">New password:</label>
+          <label className="label">Nytt passord:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             className="form-input"
-            placeholder='New password'
+            placeholder='Nytt passord'
           />
         </div>
         {error && <p className="error-message">{error}</p>}
         {message && <p className="success-message">{message}</p>}
         <button className="submit-button" type="submit" disabled={loading}>
-          {loading ? 'Updating...' : 'Update password'}
+          {loading ? 'Oppdaterer...' : 'Oppdater passord'}
         </button>
       </form>
     </div>

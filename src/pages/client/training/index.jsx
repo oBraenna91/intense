@@ -24,7 +24,7 @@ const ClientTrainingTabs = () => {
     simulateTouch: false,
     observer: true,            
     observeParents: true,
-    autoHeight: true, // Legg til denne
+    autoHeight: true,
     updateOnWindowResize: true
   };
 

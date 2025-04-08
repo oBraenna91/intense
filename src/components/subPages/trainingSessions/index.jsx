@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-//import WorkoutSessionBuilder from '../../forms/coaches/sessions';
 import { getTrainingSessions } from '../../../hooks/sessions';
 import { IonAccordion, IonAccordionGroup, IonButton, IonIcon, IonItem, IonLabel, IonList, IonSelect, IonSelectOption, useIonRouter, useIonViewWillEnter, 
     //IonToggle 
 } from '@ionic/react';
-//import { Swiper, SwiperSlide } from 'swiper/react';
-//import 'swiper/css';
 import SessionCards from '../../cards/sessions';
 import MuscleSelect from '../../lists/muscles';
 import { filterOutline } from 'ionicons/icons';
@@ -23,7 +20,6 @@ export default function TrainingSessions() {
 
 
     const [sessions, setSessions] = useState([]);
-    //const [swiperInstance, setSwiperInstance] = useState(null);
     //eslint-disable-next-line
     const [loading, setLoading] = useState(false);
     const router = useIonRouter();
@@ -31,25 +27,7 @@ export default function TrainingSessions() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedMuscle, setSelectedMuscle] = useState('');
     const [sortOrder, setSortOrder] = useState('asc');
-    //const [showMineOnly, setShowMineOnly] = useState(false);
     const [sortDateOrder, setSortDateOrder] = useState('newest');
-
-    // useEffect(() => {
-    //     fetchSessions();
-    //     //eslint-disable-next-line
-    //   }, [userId]);
-    
-    //   const fetchSessions = async () => {
-    //     setLoading(true);
-    //     try {
-    //       const data = await getTrainingSessions(coachId);
-    //       setSessions(data);
-    //     } catch (error) {
-    //       console.error('Feil ved henting av treningsøkter:', error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    //   };
 
       useIonViewWillEnter(() => {
         async function fetchAgain() {

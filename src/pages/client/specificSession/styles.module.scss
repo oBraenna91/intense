@@ -119,12 +119,12 @@
   }
 
   .iconContainer {
-    height: 60px;             /* Sett en fast høyde for hver kolonne */
-    justify-content: space-between; /* Fordeler plass mellom ikon (øverst) og tekst (nederst) */
+    height: 60px;           
+    justify-content: space-between; 
   }
   
   .iconText {
-    line-height: 1;           /* Juster line-height etter behov */
+    line-height: 1;           
     text-align: center;
   }
 

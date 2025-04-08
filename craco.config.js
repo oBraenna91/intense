@@ -1,8 +1,6 @@
-// craco.config.js
 module.exports = {
     webpack: {
       configure: (webpackConfig) => {
-        // Add ignoreWarnings configuration
         webpackConfig.ignoreWarnings = [
           { 
             module: /node_modules\/react-circular-input/,

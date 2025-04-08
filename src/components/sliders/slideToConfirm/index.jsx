@@ -32,12 +32,12 @@ const SlideToConfirm = ({ onConfirm, label = 'Slide for å bekrefte' }) => {
         onIonChange={handleIonChange}
         onIonBlur={handleIonBlur}
         style={{
-          '--bar-background': '#e0e0e0',       // Bakgrunn for tracken
+          '--bar-background': '#e0e0e0',       
           '--bar-height': '40px',
-          '--bar-padding': '20px',              // Høyden på tracken (gjør den større)
-          '--bar-border-radius': '15px',       // Rundede hjørner på tracken
+          '--bar-padding': '20px',              
+          '--bar-border-radius': '15px',       
           '--knob-size': '30px',
-          '--progress-background': '#6ef25a',  // Farge for fremdriftsdelen
+          '--progress-background': '#6ef25a',  
           '--pin-background': '#6ef25a',       
         }}
       />

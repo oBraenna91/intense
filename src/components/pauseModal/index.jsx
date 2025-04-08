@@ -4,7 +4,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function PauseModal({ isOpen, pauseCountdown, sessionPauseTimer, onClose }) {
-  // Beregn prosent basert på nedtelling
+
   const percentage = (pauseCountdown / sessionPauseTimer) * 100;
 
   return (
@@ -18,7 +18,6 @@ export default function PauseModal({ isOpen, pauseCountdown, sessionPauseTimer, 
             styles={buildStyles({
               textSize: '16px',
               pathTransitionDuration: 1,
-              //pathColor: `rgba(62, 152, 199, ${pauseCountdown / sessionPauseTimer})`,
               pathColor: '#6ef25a',
               textColor: '#333',
               trailColor: '#d6d6d6'

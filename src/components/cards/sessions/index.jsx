@@ -6,7 +6,8 @@ export default function SessionCards({ session, onClick }) {
 
   const { title, cover_image_url, main_focus, 
         id 
-} = session;
+        } = session;
+        
   const router = useIonRouter();
 
   const redirectToSessionPage = () => {

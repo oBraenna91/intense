@@ -7,7 +7,6 @@ import ResetPasswordPage from './pages/resetPassword';
 import SignUpPage from './pages/signUp';
 import Tabs from './pages/tabsNavigation';
 import { AuthProvider } from './contexts/auth';
-//import { RequestCountProvider } from './contexts/RequestCount';
 import IndexRedirect from './pages/indexRedirect';
 import SetupUserPage from './pages/setupUser';
 import ProtectedRoute from './privateRoute/privateRoute';
@@ -27,30 +26,9 @@ function App() {
                   <ProtectedRoute path="/app" component={Tabs}/>
                 </IonRouterOutlet>
               </IonReactRouter>
-          {/* <RequestCountProvider> */}
-            
-          {/* </RequestCountProvider> */}
         </AuthProvider>
       </IonApp>
   );
 }
 
 export default App;
-
-
-
-
-
-  // {/* Offentlige ruter */}
-  // <Route path="/login" component={LoginPage} exact />
-  // <Route path="/sign-up" component={SignUpPage} exact />
-  // <Route path="/reset-password" component={ResetPasswordPage} exact />
-  // <Route path="/update-password" component={UpdatePasswordPage} exact />
-
-  // {/* Beskyttede ruter */}
-  // <ProtectedRoute path="/home" component={HomePage} exact />
-  // <ProtectedRoute path="/profile" component={ProfilePage} exact />
-  // <ProtectedRoute path="/messages" component={MessagesPage} exact />
-  // <ProtectedRoute path="/discover" component={DiscoverPage} exact />
-  // <ProtectedRoute path="/settings" component={SettingsPage} exact />
-  

@@ -26,22 +26,17 @@ const ProtectedRoute = ({ component: Component, path, ...rest }) => {
       }
     }, [user, authLoading]);
   
-    // Vis en loader mens vi venter på både auth- og profilsjekk
     if (authLoading || profileLoading) {
       return <div>Laster...</div>;
     }
   
-    // Sjekk om ruten er /setup-user
     if (path === '/setup-user') {
-      // Hvis brukeren allerede har en profil, trenger de ikke å se setup-siden – redirect til app
       if (profile) {
         return <Redirect to="/app" />;
       }
-      // Hvis ikke, la SetupUserPage rendres
       return <Route {...rest} render={(props) => <Component {...props} />} />;
     }
   
-    // For andre ruter:
     if (!user) {
       return <Redirect to="/login" />;
     } else if (!profile) {

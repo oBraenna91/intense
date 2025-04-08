@@ -23,14 +23,9 @@ import {
   IonModal
 } from '@ionic/react';
 import { trashOutline } from 'ionicons/icons';
-
-// For framer-motion
 import { AnimatePresence, motion } from 'framer-motion';
-
-// Hooks / utils
 import { useParams } from 'react-router';
-import { getSpecificProgram } from '../../../hooks/programs';  // du lager selv
-//import { useSessions } from '../../hooks/sessions';                       // hvis du vil hente treningsøkter
+import { getSpecificProgram } from '../../../hooks/programs'; 
 import { supabase } from '../../../supabaseClient';
 import { getTrainingSessions } from '../../../hooks/sessions';
 import { useAuth } from '../../../contexts/auth';
@@ -40,46 +35,21 @@ export default function EditProgramPage() {
   const { programId } = useParams();
   const { coach } = useAuth();
   const { updateProgram } = usePrograms();
-
-  // Program-data
   const [program, setProgram] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // Felter for program
   const [programName, setProgramName] = useState('');
   const [programDescription, setProgramDescription] = useState('');
   const [duration, setDuration] = useState('');
   const [mainFocus, setMainFocus] = useState('');
-
   const [sessions, setSessions] = useState([]);
-
-  // Cover images
   const [coverImages, setCoverImages] = useState([]);
   const [selectedCoverImage, setSelectedCoverImage] = useState(null);
-
-  // Ukene – hver uke har { id, week_number, description, program_activities }
-  // men du kan også ha en struktur der du oversetter
-  // program_activities til "days" -> "activities" (slik du viste i create-koden).
   const [weeks, setWeeks] = useState([]);
-
-  // Håndtering av å “slå opp” en uke og vise dagene
   const [openWeekId, setOpenWeekId] = useState(null);
-
-  // Sessions, hvis du lar brukeren velge blant eksisterende treningsøkter:
-  //const { sessions, fetchSessions } = useSessions();
-
-  // Modal for å legge til en treningsøkt i en gitt uke/dag
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
   const [targetWeekId, setTargetWeekId] = useState(null);
   const [targetDayNumber, setTargetDayNumber] = useState(null);
-
-  // --------------------------------
-  //  HENTING AV PROGRAM-DATA
-  // --------------------------------
-//   useEffect(() => {
-//     fetchSessions(); // Henter alle treningsøkter
-//   }, [fetchSessions]);
 
 useEffect(() => {
     async function getSessions() {
@@ -102,25 +72,15 @@ useEffect(() => {
       try {
         const data = await getSpecificProgram(programId);
         setProgram(data);
-
-        // Putt over i feltene
         setProgramName(data.title);
         setProgramDescription(data.description);
         setDuration(data.duration);
         setMainFocus(data.main_focus);
-
         setSelectedCoverImage(data.cover_image?.id || null);
 
-        // Sorter og transformer weeks
         const sortedWeeks = (data.program_weeks || []).sort((a, b) => a.week_number - b.week_number);
 
-        // I eksemplet du viste, bruker du “days: []” inni hver uke.
-        // Du må altså transformere program_activities (som er dag_number + activity_type)
-        // til en “days” array => [ { dayNumber: 1, activities: [...] }, ... ]
-        // Under viser jeg en liten funksjon som gjør nettopp det:
-
         const weeksWithDays = sortedWeeks.map((week) => {
-          // group activities by day_number
           const daysMap = {};
           (week.program_activities || []).forEach((act) => {
             const d = act.day_number;
@@ -129,14 +89,10 @@ useEffect(() => {
             }
             daysMap[d].push(act);
           });
-
-          // lag en array over dagene 1..7 (evt. bare 1..maxDayNumber)
-          // her gjetter vi at max 7 dager i en uke:
           const daysArray = [];
           for (let dayNum = 1; dayNum <= 7; dayNum++) {
             daysArray.push({
               dayNumber: dayNum,
-              // enten en tom array eller de activities vi fant
               activities: daysMap[dayNum] || []
             });
           }
@@ -161,7 +117,6 @@ useEffect(() => {
     loadProgram();
   }, [programId]);
 
-  // Hent cover-bilder (som i session)
   useEffect(() => {
     async function fetchCoverImages() {
       try {
@@ -177,16 +132,11 @@ useEffect(() => {
     fetchCoverImages();
   }, []);
 
-  // --------------------------------
-  //  REORDER WEEKS
-  // --------------------------------
   const handleReorderWeeks = (event) => {
     const items = [...weeks];
     const [movedItem] = items.splice(event.detail.from, 1);
     items.splice(event.detail.to, 0, movedItem);
     event.detail.complete();
-
-    // Oppdater weekNumber basert på ny rekkefølge
     items.forEach((w, index) => {
       w.weekNumber = index + 1;
     });
@@ -194,16 +144,10 @@ useEffect(() => {
     setWeeks(items);
   };
 
-  // --------------------------------
-  //  UTVID / LUKK UKE
-  // --------------------------------
   function toggleAccordion(weekId) {
     setOpenWeekId((prev) => (prev === weekId ? null : weekId));
   }
 
-  // --------------------------------
-  //  KOPIER EN UKE
-  // --------------------------------
   function copyWeek(weekId) {
     const theWeek = weeks.find((w) => w.id === weekId);
     if (!theWeek) return;
@@ -214,10 +158,9 @@ useEffect(() => {
       weekNumber: weeks.length + 1,
       days: theWeek.days.map((d) => ({
         ...d,
-        // Kopier aktiviteter
         activities: d.activities.map((act) => ({
           ...act,
-          id: `temp-act-${Date.now()}-${Math.random()}`, // generer nye “temp IDer” for ny rad
+          id: `temp-act-${Date.now()}-${Math.random()}`,
         }))
       }))
     };
@@ -226,9 +169,6 @@ useEffect(() => {
     setOpenWeekId(newWeek.id);
   }
 
-  // --------------------------------
-  //  LEGG TIL / FJERN UKE
-  // --------------------------------
   function addWeek() {
     const newWeek = {
       id: `temp-week-${Date.now()}`,
@@ -245,16 +185,12 @@ useEffect(() => {
 
   function removeWeek(weekId) {
     const filtered = weeks.filter((w) => w.id !== weekId);
-    // Re-assign weekNumber
     filtered.forEach((w, i) => {
       w.weekNumber = i + 1;
     });
     setWeeks(filtered);
   }
 
-  // --------------------------------
-  //  OPPDATER BESKRIVELSE AV UKE
-  // --------------------------------
   function updateWeekDescription(weekId, newDesc) {
     const updated = weeks.map((w) => {
       if (w.id === weekId) {
@@ -265,10 +201,6 @@ useEffect(() => {
     setWeeks(updated);
   }
 
-  // --------------------------------
-  //  LEGG TIL AKTIVITET I DAG
-  // --------------------------------
-  //  “task” = gjøremål, “workout” = treningsøkt
   function addActivityToDay(weekId, dayNumber, type) {
     const newActivityId = `temp-activity-${Date.now()}-${Math.random()}`;
     const updatedWeeks = weeks.map((w) => {
@@ -296,9 +228,6 @@ useEffect(() => {
     setWeeks(updatedWeeks);
   }
 
-  // --------------------------------
-  //  FJERN AKTIVITET
-  // --------------------------------
   function removeActivity(weekId, dayNumber, activityId) {
     const newWeeks = weeks.map((w) => {
       if (w.id === weekId) {
@@ -316,9 +245,6 @@ useEffect(() => {
     setWeeks(newWeeks);
   }
 
-  // --------------------------------
-  //  OPPDATER TEKST (FOR TASK)
-  // --------------------------------
   function updateActivityDescription(weekId, dayNumber, activityId, newDesc) {
     const updatedWeeks = weeks.map((w) => {
       if (w.id === weekId) {
@@ -341,19 +267,14 @@ useEffect(() => {
     setWeeks(updatedWeeks);
   }
 
-  // --------------------------------
-  //  ÅPNE MODAL FOR TRENINGSØKT
-  // --------------------------------
   function openSessionModal(weekId, dayNumber) {
     setTargetWeekId(weekId);
     setTargetDayNumber(dayNumber);
     setSessionModalOpen(true);
   }
 
-  // Bruker klikker på en “eksisterende session”
   function selectSessionForDay(sessionId, sessionObj) {
-    // Oppdater state i weeks -> day -> activity
-    // Vi legger til en ny “workout” activity med workout_session_id = sessionId
+
     if (!targetWeekId || !targetDayNumber) return;
 
     const newActivityId = `temp-activity-${Date.now()}-${Math.random()}`;
@@ -384,16 +305,11 @@ useEffect(() => {
     setSessionModalOpen(false);
   }
 
-  // --------------------------------
-  //  LAGRING TIL SUPABASE
-  // --------------------------------
   async function handleSaveProgram() {
     setLoading(true);
     setError(null);
 
     try {
-      // “oversett” weeks + days -> program_weeks + program_activities
-      // (slik at du kan sende inn i updateProgram)
       const program_weeks = weeks.map((w) => {
         const allActivities = [];
         w.days.forEach((d) => {
@@ -420,7 +336,7 @@ useEffect(() => {
         description: programDescription,
         duration,
         main_focus: mainFocus,
-        cover_image: selectedCoverImage, // evt. bare en ID
+        cover_image: selectedCoverImage, 
         program_weeks
       };
 
@@ -446,7 +362,6 @@ useEffect(() => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {/* Toppfelter */}
         {!program && (
           <div><IonSpinner/> Laster...</div>
         )}
@@ -540,8 +455,6 @@ useEffect(() => {
                     </div>
                   </IonLabel>
                 </IonItem>
-
-                {/* Kopier / Slett uke */}
                 <IonItemOptions side="start">
                   <IonItemOption color="success" onClick={() => copyWeek(week.id)}>
                     Kopier
@@ -558,8 +471,6 @@ useEffect(() => {
                   </IonItemOption>
                 </IonItemOptions>
               </IonItemSliding>
-
-              {/* Her kommer “accordion”-delen for innhold i uka */}
               <AnimatePresence>
                 {openWeekId === week.id && (
                   <motion.div
@@ -631,11 +542,8 @@ useEffect(() => {
                                 </div>
 
                                 {day.activities.map((activity) => {
-                                  // Finn session-navnet (hvis type=workout)
                                   let sessionName = null;
                                   if (activity.activity_type === 'workout') {
-                                    // Bruk enten activity.workout_session?.title
-                                    // eller finn i sessions-liste.  
                                     sessionName =
                                       activity.workout_session?.title ||
                                       sessions.find(
@@ -721,8 +629,6 @@ useEffect(() => {
             Oppdater program
           </IonButton>
         </div>
-
-        {/* Modal for å velge treningsøkt */}
         <IonModal
           isOpen={sessionModalOpen}
           onDidDismiss={() => setSessionModalOpen(false)}

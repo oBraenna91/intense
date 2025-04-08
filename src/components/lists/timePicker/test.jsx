@@ -2,10 +2,9 @@ import React from 'react';
 import { CircularInput, CircularTrack, CircularProgress, CircularThumb } from 'react-circular-input';
 
 const PauseCircularInput = ({ seconds, onChange, maxSeconds = 120 }) => {
-  // Konverterer sekunder til en normalisert verdi (0 til 1)
+  
   const normalizedValue = seconds / maxSeconds;
 
-  // Når slideren endres, konverterer vi tilbake til sekunder
   const handleChange = (value) => {
     const newSeconds = Math.round(value * maxSeconds);
     onChange(newSeconds);

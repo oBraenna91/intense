@@ -4,7 +4,6 @@ import { useLocation, useParams } from 'react-router-dom/cjs/react-router-dom.mi
 import styles from './styles.module.scss';
 import { chevronBackOutline, stopwatchOutline, timerOutline } from 'ionicons/icons';
 import { getSpecificSession } from '../../../hooks/sessions';
-//import SlideToConfirm from '../../components/sliders/slideToConfirm';
 import { SwipeableButton } from "react-swipeable-button";
 import WorkoutTracker from '../../../components/workoutTracker/tracker';
 
@@ -16,22 +15,15 @@ export default function ClientSpecificSessionPage() {
     const queryParams = new URLSearchParams(location.search);
     const weekId = queryParams.get('weekId');
     const dayOfWeek = queryParams.get('day');
-
-    // console.log("Week ID:", weekId);
-    // console.log("Day of week:", dayOfWeek);
     const programInfo = {
         weekId,
         dayOfWeek
     }
-    //const { session, loading } = useFetchSession(sessionId);
     const [session, setSession] = useState(null);
     const router = useIonRouter(); 
     const [loading, setLoading] = useState(false);
-    //const [isEditMode, setIsEditMode] = useState(false);
     const swipeButtonRef = useRef();
     const [showTrackerModal, setShowTrackerModal] = useState(false);
-
-    //const [showPopover, setShowPopover] = useState(false);
 
     useEffect(() => {
         const storedWorkout = localStorage.getItem('current-workout');
@@ -53,7 +45,6 @@ export default function ClientSpecificSessionPage() {
           setLoading(true);
           try {
             const data = await getSpecificSession(sessionId);
-            // Hvis location.state har programInfo, merge den med data
             const extendedData = location.state && location.state.programInfo 
               ? { ...data, programInfo: location.state.programInfo }
               : data;
@@ -200,13 +191,7 @@ export default function ClientSpecificSessionPage() {
                 onDidDismiss={() => setShowTrackerModal(false)}
                 className="straight-modal"
                 swipeToClose={false}
-                // breakpoints={[0, 1]} 
-                // initialBreakpoint={1}
             >
-                {/* <SessionTracker 
-                    session={session} 
-                    onClose={() => setShowTrackerModal(false)} 
-                /> */}
                 <WorkoutTracker
                     session={session}
                     programInfo={programInfo}

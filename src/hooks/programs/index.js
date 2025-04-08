@@ -85,17 +85,9 @@ export const usePrograms = () => {
       setLoading(true);
       setError(null);
   
-      // Destrukturer ut 'program_weeks' (eller 'weeks') – alt etter hvordan dataen ser ut hos deg
-      // Her antar jeg du sender inn:
-      // {
-      //   title, description, duration, main_focus, cover_image, 
-      //   program_weeks: [{ week_number, description, program_activities: [...] }, ...]
-      // }
       const { program_weeks, ...mainProgramFields } = updatedData;
   
       try {
-        // 1) Oppdater selve programmet i 'workout_programs'
-        //    Her er et eksempel – du må tilpasse feltnavn hvis de avviker hos deg
         const { error: updateErr } = await supabase
           .from('workout_programs')
           .update({
@@ -103,14 +95,12 @@ export const usePrograms = () => {
             description: mainProgramFields.description,
             duration: mainProgramFields.duration,
             main_focus: mainProgramFields.main_focus,
-            cover_image: mainProgramFields.cover_image, // enten en ID eller hele obj
-            // ... eventuelt andre felter
+            cover_image: mainProgramFields.cover_image, 
           })
           .eq('id', programId);
   
         if (updateErr) throw updateErr;
   
-        // 2) Slett alle eksisterende weeks for dette programmet
         const { error: deleteWeeksErr } = await supabase
           .from('program_weeks')
           .delete()
@@ -118,9 +108,6 @@ export const usePrograms = () => {
   
         if (deleteWeeksErr) throw deleteWeeksErr;
   
-        // 3) Sett inn uker på nytt
-        //    For hver uke i updatedData.program_weeks, inserter i 'program_weeks'
-        //    for så å inserte program_activities til den nye uke-raden
         for (const week of program_weeks) {
           const { data: newWeek, error: weekErr } = await supabase
             .from('program_weeks')
@@ -134,7 +121,6 @@ export const usePrograms = () => {
   
           if (weekErr) throw weekErr;
   
-          // 4) For hver activity i denne uka, sett inn i 'program_activities'
           for (const activity of week.program_activities || []) {
             const { error: actErr } = await supabase
               .from('program_activities')
@@ -151,7 +137,7 @@ export const usePrograms = () => {
         }
   
         setLoading(false);
-        return true; // eller returnere en suksess-verdi
+        return true; 
       } catch (err) {
         console.error('Feil ved oppdatering av program:', err);
         setError(err.message);

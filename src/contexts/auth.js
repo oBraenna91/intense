@@ -57,9 +57,6 @@ export const AuthProvider = ({ children }) => {
         const currentUser = session?.user ?? null;
         setUser(currentUser);
         if (currentUser) {
-          // await fetchProfile(currentUser);
-          // await fetchCoachProfile(currentUser);
-          // await fetchClientProfile(currentUser);
           await Promise.all([
             fetchProfile(currentUser),
             fetchCoachProfile(currentUser),

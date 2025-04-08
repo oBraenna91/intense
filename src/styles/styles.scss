@@ -29,13 +29,13 @@ ion-modal.straight-modal {
 
 .video-container {
   width: 100%;
-  aspect-ratio: 1 / 1; /* Sikrer et kvadratisk format */
+  aspect-ratio: 1 / 1;
 }
 
 .video-container iframe {
   width: 100%;
   height: 100%;
-  border: 0; /* Fjerner eventuell standard ramme */
+  border: 0; 
 }
 
 .overshoot {
@@ -188,8 +188,8 @@ ion-item.list-card {
 .sets-container {
   max-width: 100%;
   overflow: hidden;
-  white-space: nowrap; /* Sørger for at teksten ikke brytes */
-  text-overflow: ellipsis; /* Viser "..." ved overflow */
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
 }
 
 ion-toolbar.white-toolbar {

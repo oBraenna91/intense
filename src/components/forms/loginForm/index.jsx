@@ -24,7 +24,7 @@ export default function LoginForm() {
     if (error) {
       setError(error.message);
     } else {
-        alert('You are now logged in!')
+        alert('Du er nå logget inn!')
       router.push('/app', 'forward');
     }
     setLoading(false);
@@ -45,19 +45,19 @@ export default function LoginForm() {
           />
         </div>
         <div className="label-input-container">
-          <label className="label">Password:</label>
+          <label className="label">Passord:</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             className="form-input"
-            placeholder='Password'
+            placeholder='Passord'
           />
         </div>
         {error && <p className="error-message">{error}</p>}
         <button className="submit-button" type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log in'}
+          {loading ? 'Logger inn...' : 'Logg in'}
         </button>
       </form>
     </div>

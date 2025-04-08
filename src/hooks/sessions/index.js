@@ -16,9 +16,7 @@ export const createWorkoutSession = async (sessionData) => {
   
       for (const exercise of exercises) {
         const { id: exerciseId, order, sets, comment } = exercise;
-        //console.log("Setter inn øvelse med kommentar:", { workout_session_id: workoutSessionId, exercise_id: exerciseId, order, comment });
 
-  
         const { data: exerciseDataRes, error: exerciseError } = await supabase
           .from('workout_session_exercises')
           .insert([{ 
@@ -184,7 +182,6 @@ export const createWorkoutSession = async (sessionData) => {
       throw updateError;
     }
     
-    // Slett gamle rader i workout_session_exercises for denne økta
     const { error: deleteError } = await supabase
       .from('workout_session_exercises')
       .delete()
@@ -194,7 +191,6 @@ export const createWorkoutSession = async (sessionData) => {
       throw deleteError;
     }
     
-    // Legg inn nye øvelser
     for (const ex of data.exercises) {
       const { data: insertedExercise, error: insErr } = await supabase
         .from('workout_session_exercises')
@@ -210,13 +206,12 @@ export const createWorkoutSession = async (sessionData) => {
       
       const newExerciseId = insertedExercise[0].id;
       
-      // Legg inn settene for øvelsen
       for (const s of ex.sets) {
         const { error: setErr } = await supabase
           .from('workout_session_exercise_sets')
           .insert({
             workout_session_exercise_id: newExerciseId,
-            planned_reps: s.planned_reps || null, // bruker planned_reps, som matcher ditt flatten-resultat
+            planned_reps: s.planned_reps || null,
             set_number: s.set_number
           });
         
@@ -232,7 +227,7 @@ export const createWorkoutSession = async (sessionData) => {
       .from('program_activities')
       .select('id')
       .eq('workout_session_id', sessionId)
-      .eq('program_week_id', programWeekId)  // eller en annen kolonne som refererer til uken
+      .eq('program_week_id', programWeekId)
       .eq('day_number', dayNumber)
       .single();
   

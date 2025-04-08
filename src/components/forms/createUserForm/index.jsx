@@ -3,8 +3,12 @@ import { useTransition, animated } from 'react-spring';
 import { IonCard, IonCardContent, IonInput, IonButton } from '@ionic/react';
 
 const questions = [
-  { id: 1, label: `What's your first name?` },
-  { id: 2, label: `What's your last name?` },
+  { id: 1, label: `Hva er ditt fornavn?` },
+  { id: 2, label: `Hva er ditt etternavn?` },
+  { id: 3, label: `Identifiserer du deg som mann eller dame?`},
+  { id: 4, label: `Hvor gammel er du?`},
+  { id: 5, label: `Hvor mye veier du?`},
+  { id: 6, label: `Hva er din treningsalder? ( hvor lenge har du trent, i antall år?)`},
 ];
 
 const MultiStepForm = ({ onComplete }) => {
@@ -55,7 +59,7 @@ const MultiStepForm = ({ onComplete }) => {
                 <IonInput
                   value={currentAnswer}
                   onIonInput={handleInputChange}
-                  placeholder="Write your answer here"
+                  placeholder="Skriv ditt svar her..."
                 />
                 <IonButton
                   onClick={handleNext}
@@ -63,7 +67,7 @@ const MultiStepForm = ({ onComplete }) => {
                   style={{ marginTop: '1rem' }}
                   disabled={!isInputValid}
                 >
-                  {currentStep === questions.length - 1 ? 'Submit' : 'Next'}
+                  {currentStep === questions.length - 1 ? 'Send inn' : 'Neste'}
                 </IonButton>
               </IonCardContent>
             </IonCard>

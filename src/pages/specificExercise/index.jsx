@@ -14,7 +14,6 @@ import {
   import { useParams } from 'react-router-dom';
   import { supabase } from '../../supabaseClient';
 import { useAuth } from '../../contexts/auth';
-  //import ExerciseEditForm from '../components/ExerciseEditForm'; // Opprett denne komponenten for redigering
   
   export default function SpecificExercisePage() {
     const { user, profile } = useAuth();
@@ -78,29 +77,6 @@ import { useAuth } from '../../contexts/auth';
             <p style={{ padding: '1rem' }}>{error}</p>
           ) : (
             <>
-              {/* Øvelsesbilde øverst */}
-              {/* {exercise.image_url && (
-                <img 
-                  src={exercise.image_url} 
-                  alt={exercise.name} 
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              )} */}
-              {/* {exercise.video_url && (
-                    <div 
-                    // style={{ marginTop: '1rem' }} 
-                    className="video-container">
-                        <iframe
-                        width="100%"
-                        height="315"
-                        src={`https://www.youtube.com/embed/${exercise.video_url}`}
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        title="YouTube video player"
-                        ></iframe>
-                    </div>
-                    )} */}
                     {exercise.video_url && (
                       <div className="video-container">
                         <iframe

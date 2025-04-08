@@ -21,7 +21,7 @@ export default function SignUpForm() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-          setMessage('Check your e-mail to verify your account!');
+          setMessage('Sjekk din e-post for å bekrefte din konto!');
         }
     };
 
@@ -42,17 +42,17 @@ export default function SignUpForm() {
         />
       </div>
       <div className="label-input-container">
-        <label className="label">Password</label>
+        <label className="label">Passord</label>
         <input 
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           className="form-input"
-          placeholder="Password"
+          placeholder="Passord"
         />
       </div>
-      <button className="submit-button" type="submit">Create account</button>
+      <button className="submit-button" type="submit">Opprett konto</button>
     </form>
   );
 }

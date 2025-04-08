@@ -25,8 +25,6 @@ const ExerciseLegend = () => (
 const ExerciseList = ({ userId, userRole }) => {
   const router = useIonRouter();
   const {profile} = useAuth();
-  // const { exercises: initialExercises, loading, error, deleteExercise, fetchExercises } = useExercises(userId);
-  // const [exercises, setExercises] = useState(initialExercises);
   const { deleteExercise } = useExercises(userId);
   const [exercises, setExercises] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -114,7 +112,6 @@ filteredExercises = filteredExercises.sort((a, b) => {
             )}
             <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>
                 <IonLabel>Filtrer på muskelgruppe</IonLabel>
-                {/* Her kan du bruke din egen MuscleSelect-komponent */}
                 <MuscleSelect selectedMuscle={selectedMuscle} setSelectedMuscle={setSelectedMuscle} />
             </IonItem>
             <IonItem style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', '--background': 'var(--ion-color-light)', }}>

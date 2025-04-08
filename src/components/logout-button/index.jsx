@@ -7,14 +7,14 @@ export default function LogoutButton() {
     const router = useIonRouter();
 
   const handleLogout = async () => {
-    const confirmed = window.confirm('Are you sure you want to log out?');
+    const confirmed = window.confirm('Er du sikker på at du har lyst til å logge ut?');
 
     if (confirmed) {
       await supabase.auth.signOut();
-      alert('You are now logged out!')
+      alert('Du er nå logget ut!')
       router.push('/login', 'back');
     }
   };
 
-  return <button className={styles.logOutButton} onClick={handleLogout}>Log out</button>;
+  return <button className={styles.logOutButton} onClick={handleLogout}>Logg ut</button>;
 }

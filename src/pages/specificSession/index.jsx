@@ -4,23 +4,18 @@ import { useLocation, useParams } from 'react-router-dom/cjs/react-router-dom.mi
 import styles from './styles.module.scss';
 import { chevronBackOutline, stopwatchOutline, timerOutline } from 'ionicons/icons';
 import { deleteSession, getSpecificSession } from '../../hooks/sessions';
-//import SlideToConfirm from '../../components/sliders/slideToConfirm';
 import { SwipeableButton } from "react-swipeable-button";
 
 
 
 export default function SpecificSessionPage() {
     const { sessionId } = useParams();
-    //const { session, loading } = useFetchSession(sessionId);
     const [session, setSession] = useState(null);
     const router = useIonRouter(); 
     const [loading, setLoading] = useState(false);
-    //const [isEditMode, setIsEditMode] = useState(false);
     const swipeButtonRef = useRef();
-
-    //const [showPopover, setShowPopover] = useState(false);
-
     const location = useLocation();
+
     useEffect(() => {
         if (location.state && location.state.updatedSession) {
             setSession(location.state.updatedSession);
@@ -168,8 +163,6 @@ export default function SpecificSessionPage() {
                 </div>
                 <div className=" d-flex flex-column align-items-center col-12">
                     <IonButton className="col-10" onClick={() => redirectToEdit(sessionId)}>Rediger denne økten</IonButton>
-                    {/* <IonButton className="col-10" style={{ '--background' : 'lightcoral' }} onClick={() => deleteSessionHandler(sessionId)}>Slett økt</IonButton> */}
-                    {/* <SlideToConfirm label="Dra for å slette økten" onConfirm={() => deleteSessionHandler(sessionId)}/> */}
                     <div className="col-10 d-flex flex-column justify-content-center mt-2 mb-5">
                         <SwipeableButton
                             ref={swipeButtonRef}

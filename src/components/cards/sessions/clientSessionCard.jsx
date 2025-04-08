@@ -8,7 +8,8 @@ export default function ClientSessionCards({ session, onClick }) {
 
   const { title, workout_cover_images, main_focus, 
         id, programInfo, isCompleted
-} = session;
+        } = session;
+        
   const router = useIonRouter();
 
   const redirectToSessionPage = () => {

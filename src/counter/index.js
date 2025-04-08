@@ -1,14 +1,13 @@
-// Eksempel på en hjelpefunksjon for relativ tid:
 export function formatRelativeTime(dateString) {
     const date = new Date(dateString);
     const now = new Date();
-    const diff = now - date; // tidsforskjell i millisekunder
+    const diff = now - date;
     const diffInMinutes = Math.floor(diff / 60000);
     const diffInHours = Math.floor(diff / (60000 * 60));
     const diffInDays = Math.floor(diff / (60000 * 60 * 24));
     const diffInWeeks = Math.floor(diffInDays / 7);
-    const diffInMonths = Math.floor(diffInDays / 30); // ca.
-    const diffInYears = Math.floor(diffInDays / 365); // ca.
+    const diffInMonths = Math.floor(diffInDays / 30);
+    const diffInYears = Math.floor(diffInDays / 365);
   
     if (diffInMinutes < 10) {
       return "just now";

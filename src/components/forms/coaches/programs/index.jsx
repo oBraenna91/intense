@@ -337,11 +337,7 @@ const ProgramBuilder = () => {
                 {customFocus ? 'Velg fra liste' : 'Tilpass selv'}
             </IonButton>
         </IonItem>
-
-        {/* <IonItem>
-          <IonLabel position="stacked">Varighet (uker)</IonLabel>
-          <IonInput type="number" value={duration} onIonChange={e => setDuration(parseInt(e.detail.value))} />
-        </IonItem> */}
+        
         <AnimatePresence initial={false}>
             {!isRecurring && (
                 <motion.div

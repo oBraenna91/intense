@@ -18,18 +18,18 @@ export default function LoginPage() {
     <IonPage>
         <IonContent>
             <div>
-                <h1 className="text-center my-5">LOG IN</h1>
+                <h1 className="text-center my-5">LOGG IN</h1>
                 <LoginForm />
                 <div className={`${styles.forgotPasswordContainer}`}>
-                    <div>Forgot your password?</div>
+                    <div>Glemt pasord?</div>
                     <div className={styles.redirectWriting} onClick={redirectToForgotPassword}>
-                    Click here
+                      Klikk her
                     </div>
                 </div>
                 <div className={styles.signUpContainer}>
-                    <div>Not yet signed up?</div>
+                    <div>Ikke konto enda?</div>
                     <div className={styles.redirectWriting} onClick={redirectToSignUpPage}>
-                    Click here
+                      Klikk her
                     </div>
                 </div>
             </div>

@@ -15,7 +15,6 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
 
 
     const { user, client } = useAuth();
-  // Initial state med lokal lagring
   const [workoutData, setWorkoutData] = useState(() => {
     const savedData = localStorage.getItem('current-workout');
     return savedData ? JSON.parse(savedData) : {
@@ -43,12 +42,10 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   const swiperRef = useRef(null);
   const [pauseCountdown, setPauseCountdown] = useState(null);
 
-  // Lagre underveis
   useEffect(() => {
     localStorage.setItem('current-workout', JSON.stringify(workoutData));
   }, [workoutData]);
 
-  // Timer for øktens varighet
   useEffect(() => {
     const interval = setInterval(() => {
       setSessionDuration(prev => prev + 1);
@@ -97,7 +94,6 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
         ...lastSet,
         id: `temp-${Date.now()}`,
         actualKg: '',
-        // Behold eventuelt actualReps eller sett opp nye defaults
         completed: false
       });
       
@@ -109,11 +105,9 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
     setWorkoutData(prev => {
       const newExercises = prev.exercises.map((exercise, idx) => {
         if (idx !== exerciseIndex) return exercise;
-        // Hvis det er mer enn ett sett, fjern det siste
         if (exercise.sets.length > 1) {
           return { ...exercise, sets: exercise.sets.slice(0, -1) };
         }
-        // Eller eventuelt vis en melding, hvis du ikke vil fjerne det siste settet
         return exercise;
       });
       return { ...prev, exercises: newExercises };
@@ -124,27 +118,24 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   const finishWorkout = async () => {
     setIsLoading(true);
     try {
-      // 1) Opprett ny log i workout_session_logs
-      //    Bruk "select()" for å få tilbake den nye raden med ID
       const { data: insertedLogs, error: logError } = await supabase
         .from('workout_session_logs')
         .insert({
-          // Navn på kolonner i workout_session_logs:
           workout_session_id: session.id,
           client_id: client.id,
-          client_comment: workoutData.comment,       // eller "comment"
+          client_comment: workoutData.comment,       
           rating: workoutData.rating,
           duration: sessionDuration,
-          start_time: workoutData.startTime,        // hvis du ønsker
-          end_time: new Date().toISOString(),       // f.eks. "nå"
-          name: session.title || 'Økt uten navn'      // eller hva du vil kalle det
+          start_time: workoutData.startTime,        
+          end_time: new Date().toISOString(),       
+          name: session.title || 'Økt uten navn'      
         })
         .select()
-        .single();  // .single() hvis du kun forventer én rad
+        .single();  
   
       if (logError) throw logError;
   
-      const newLog = insertedLogs; // resultatet fra insert
+      const newLog = insertedLogs;
       
       const exercisesUsed = workoutData.exercises.filter((exercise) =>
         exercise.sets.some(
@@ -165,16 +156,11 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   
       if (exercisesError) throw exercisesError;
   
-      // insertedExercises vil matche rekkefølgen til .map() over.
-      // Dvs. insertedExercises[i] hører til workoutData.exercises[i].
-  
-      // 3) Opprett sets i workout_log_sets for hver exercise
       for (let i = 0; i < insertedExercises.length; i++) {
-        const insertedExercise = insertedExercises[i];      // den nye DB-raden
-        const originalExercise = workoutData.exercises[i];  // data i state
+        const insertedExercise = insertedExercises[i];      
+        const originalExercise = workoutData.exercises[i];  
   
         const setsToInsert = originalExercise.sets
-        // Filtrer ut sett som ikke er fylt inn
         .filter(set => set.actualReps !== '' && set.actualKg !== '')
         .map((set, setIndex) => ({
             workout_log_exercise_id: insertedExercise.id,
@@ -232,7 +218,6 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
 
   return (
       <IonContent fullscreen style={{ '--padding-top': 'env(safe-area-inset-top)'  }}>
-        {/* Header */}
         <div className={`${styles.topHeader} mt-3`}>
           <IonButton fill="clear" onClick={onClose}>
             <IonIcon icon={chevronDownOutline} />
@@ -255,8 +240,6 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
             <span>{formatTime(sessionDuration)}</span>
           </div>
         </div>
-
-        {/* Main content */}
         <Swiper
           ref={swiperRef}
           onSlideChange={(swiper) => {
@@ -317,23 +300,14 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
                     />
                         </div>
                                         <div>
-                                        {/* <IonCheckbox
-                        checked={workoutData.exercises[exerciseIndex].sets[setIndex].completed || false}
-                        onIonChange={e =>
-                        handleInputChange(exerciseIndex, setIndex, 'completed', e.detail.checked)
-                        }
-                    /> */}
                     <IonCheckbox
                         checked={workoutData.exercises[exerciseIndex].sets[setIndex].completed || false}
                         onIonChange={e => {
                             const isChecked = e.detail.checked;
-                            // Oppdater settet som fullført
                             handleInputChange(exerciseIndex, setIndex, 'completed', isChecked);
-                            // Start nedtelling når settet markeres fullført, basert på session.pause_timer
                             if (isChecked) {
                             setPauseCountdown(session.pause_timer);
                             } else {
-                            // Hvis brukeren fjerner merket, kan du nullstille nedtellingen (eller la den fortsette)
                             setPauseCountdown(null);
                             }
                         }}
@@ -359,8 +333,6 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
               <div className="py-3" />
             </SwiperSlide>
           ))}
-          
-          {/* Review slide */}
           <SwiperSlide key="review">
             <div className={styles.reviewSlide}>
               <h2>Vurder økten</h2>

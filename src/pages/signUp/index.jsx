@@ -10,7 +10,7 @@ export default function SignUpPage() {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/login" />
                     </IonButtons>
-                    <IonTitle>Register</IonTitle>
+                    <IonTitle>Registrer</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent>

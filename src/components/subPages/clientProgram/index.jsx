@@ -109,7 +109,6 @@ export default function ClientProgramOverView({ program, updateSlideHeight }) {
   
         if (activitiesError) throw activitiesError;
   
-        // 2. Lag progress-map
         const progressMap = {};
         activitiesData.forEach(activity => {
           if (activity.activity_progress?.[0]) {
@@ -120,7 +119,6 @@ export default function ClientProgramOverView({ program, updateSlideHeight }) {
         });
         setProgress(progressMap);
   
-        // 3. Hent workout-details
         const workoutDetails = {};
         const workoutActivities = activitiesData.filter(
           a => a.activity_type === 'workout' && a.workout_session_id
