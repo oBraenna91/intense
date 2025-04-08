@@ -357,7 +357,7 @@ useEffect(() => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={`/app/program/${programId}`} />
+            <IonBackButton defaultHref={`/app/program/${programId}`} text="Tilbake" />
           </IonButtons>
         </IonToolbar>
       </IonHeader>

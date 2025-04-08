@@ -244,7 +244,7 @@ const WorkoutSessionBuilder = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref='/app/training' />
+            <IonBackButton defaultHref='/app/training' text="Tilbake"/>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

@@ -144,4 +144,3 @@ const ClientTrainingTabs = () => {
 };
 
 export default ClientTrainingTabs;
-

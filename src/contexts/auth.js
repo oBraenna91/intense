@@ -83,6 +83,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       fetchProfile(user);
+      fetchCoachProfile(user);
+      fetchClientProfile(user);
     }
     //eslint-disable-next-line
   }, [user?.id]);

@@ -64,7 +64,7 @@ import { useAuth } from '../../contexts/auth';
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonBackButton defaultHref={backHref} />
+              <IonBackButton defaultHref={backHref} text="Tilbake"/>
             </IonButtons>
           </IonToolbar>
         </IonHeader>

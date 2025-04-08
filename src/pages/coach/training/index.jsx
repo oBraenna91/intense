@@ -97,4 +97,3 @@ const TrainingTabs = () => {
 };
 
 export default TrainingTabs;
-

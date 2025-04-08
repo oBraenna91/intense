@@ -292,7 +292,7 @@ const ProgramBuilder = () => {
             <IonHeader>
                 <IonToolbar>
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref='/app/training' />
+                        <IonBackButton defaultHref='/app/training' text="Tilbake"/>
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
@@ -337,7 +337,7 @@ const ProgramBuilder = () => {
                 {customFocus ? 'Velg fra liste' : 'Tilpass selv'}
             </IonButton>
         </IonItem>
-        
+
         <AnimatePresence initial={false}>
             {!isRecurring && (
                 <motion.div

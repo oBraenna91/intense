@@ -56,6 +56,7 @@ export default function SpecificProgramPage() {
               router.push('/app/training', 'back');
             } catch (error) {
               console.error("Feil ved sletting:", error.message);
+              alert(`${error.message}`);
             }
           };
 
@@ -93,7 +94,7 @@ export default function SpecificProgramPage() {
             <IonContent fullscreen>
                 <IonButton 
                     fill="clear" 
-                    style={{ position: 'fixed', top: '50px', left: '0px', zIndex: 1000, color: 'white' }}
+                    style={{ position: 'absolute', top: '50px', left: '0px', zIndex: 1000, color: 'white' }}
                     onClick={() => router.push('/app/training', 'back')}
                 >
                     <IonIcon icon={chevronBackOutline} /> Tilbake
@@ -134,6 +135,7 @@ export default function SpecificProgramPage() {
                                 <AnimatePresence>
                                     {openWeekId === week.id && (
                                     <motion.div
+                                        key={`week-panel-${week.id}`}
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: 'auto', opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
@@ -160,18 +162,18 @@ export default function SpecificProgramPage() {
                                                     if (activities.length === 0) return null;
 
                                                     return (
-                                                    <IonAccordion key={dayNum} value={`day-${week.id}-${dayNum}`}>
+                                                    <IonAccordion key={`week-${week.id}-day-${dayNum}`} value={`day-${week.id}-${dayNum}`}>
                                                         <IonItem slot="header">
                                                         <IonLabel style={{ fontSize: '1.3rem' }}><strong>Dag {dayNum}</strong></IonLabel>
                                                         </IonItem>
                                                         <div slot="content" style={{ padding: '12px 16px' }}>
                                                         {activities.map((activity, index) => (
                                                             <div
-                                                            key={activity.id}
-                                                            className={[
-                                                                styles.exerciseCard,
-                                                                activity.type === 'workout' ? styles.workoutCard : styles.taskCard,
-                                                            ].join(' ')}
+                                                                key={`${week.id}-${activity.id}-${index}`}
+                                                                className={[
+                                                                    styles.exerciseCard,
+                                                                    activity.type === 'workout' ? styles.workoutCard : styles.taskCard,
+                                                                ].join(' ')}
                                                             >
                                                             <div style={{ fontSize: '0.75em', color: 'gray' }}>
                                                                 {activity.activity_type === 'task' ? 'Gjøremål' : 'Treningsøkt'}
@@ -214,7 +216,7 @@ export default function SpecificProgramPage() {
                         <IonList>
                         {programClients.length > 0 ? (
                             programClients.map((assignment) => (
-                                <IonItemSliding key={assignment.id}>
+                                <IonItemSliding key={assignment.client_id}>
                                 <IonItem>
                                   <IonIcon
                                     icon={personCircleOutline}
