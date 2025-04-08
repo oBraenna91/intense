@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   const fetchProfile = async (currentUser) => {
     if (currentUser) {
@@ -66,7 +65,6 @@ export const AuthProvider = ({ children }) => {
       } catch(error) {
         console.error(error);
       } finally {
-        setIsInitialized(true);
         setLoading(false);
       }
     };
@@ -90,7 +88,7 @@ export const AuthProvider = ({ children }) => {
   }, [user?.id]);
 
   return (
-    <AuthContext.Provider value={{ user, profile, coach, client, loading: loading || !isInitialized, fetchProfile }}>
+    <AuthContext.Provider value={{ user, profile, coach, client, loading: loading, fetchProfile }}>
       {children}
     </AuthContext.Provider>
   );

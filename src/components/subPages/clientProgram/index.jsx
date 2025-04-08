@@ -88,8 +88,11 @@ export default function ClientProgramOverView({ program, updateSlideHeight }) {
   useEffect(() => {
   
     async function fetchActivities() {
-      if (!currentWeekRecord || !user?.id) {
-        console.log('Missing required data - currentWeekRecord or user.id');
+      if (!program || !user?.id) {
+        return;
+      }
+      if (!currentWeekRecord) {
+        console.log('Missing required data - currentWeekRecord');
         return;
       }
       
@@ -163,7 +166,7 @@ export default function ClientProgramOverView({ program, updateSlideHeight }) {
     }
   
     fetchActivities();
-  }, [currentWeekRecord, dayOfWeek, user?.id, updateSlideHeight]);
+  }, [currentWeekRecord, dayOfWeek, user?.id, updateSlideHeight, program]);
 
   const sessions = Object.values(workoutDetails).map(detail => detail.session);
 

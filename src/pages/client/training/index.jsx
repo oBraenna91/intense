@@ -61,7 +61,7 @@ const ClientTrainingTabs = () => {
           setTimeout(() => {
             swiperRef.current.update();
             swiperRef.current.updateAutoHeight();
-          }, 100);
+          }, 500);
         }
       } catch(error) {
         console.error(error);

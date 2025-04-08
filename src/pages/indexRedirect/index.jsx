@@ -8,7 +8,7 @@ const IndexRedirect = () => {
   if (loading || !profile || (profile.role === 'coach' && !coach)) {
     return (
       <div className="col-12 d-flex justify-content-center mt-5 pt-5">
-        Loading...
+        Laster...
       </div>
     );
   }
