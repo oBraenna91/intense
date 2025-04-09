@@ -76,7 +76,7 @@ export default function ClientSpecificSessionPage() {
             <IonContent fullscreen >
                 <IonButton 
                 fill="clear" 
-                style={{ position: 'fixed', top: '50px', left: '0px', zIndex: 1000, color: 'white' }}
+                style={{ position: 'absolute', top: '50px', left: '0px', zIndex: 1000, color: 'white' }}
              onClick={() => router.push('/app/client/training', 'back')}
             >
             <IonIcon icon={chevronBackOutline} /> Tilbake

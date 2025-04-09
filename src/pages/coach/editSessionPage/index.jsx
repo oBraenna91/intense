@@ -252,7 +252,7 @@ export default function UpdateSessionPage() {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={`/app/session/${sessionId}`} />
+            <IonBackButton defaultHref={`/app/session/${sessionId}`} text="Tilbake"/>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

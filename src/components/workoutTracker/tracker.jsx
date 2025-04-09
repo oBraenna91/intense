@@ -217,7 +217,7 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   };
 
   return (
-      <IonContent fullscreen style={{ '--padding-top': 'env(safe-area-inset-top)'  }}>
+      <IonContent fullscreen style={{ '--padding-top': 'env(safe-area-inset-top)', backgroundColor: 'white' }}>
         <div className={`${styles.topHeader} mt-3`}>
           <IonButton fill="clear" onClick={onClose}>
             <IonIcon icon={chevronDownOutline} />
