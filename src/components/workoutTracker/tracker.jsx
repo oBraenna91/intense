@@ -1,5 +1,5 @@
-import { IonButton, IonContent, IonIcon, IonSpinner, IonCheckbox, IonInput, useIonToast, IonTextarea } from '@ionic/react';
-import {  timeOutline, starOutline, star, addCircleOutline, trashOutline, chevronDownOutline } from 'ionicons/icons';
+import { IonButton, IonContent, IonIcon, IonSpinner, IonCheckbox, IonInput, useIonToast, IonTextarea, IonHeader, IonToolbar } from '@ionic/react';
+import {  timeOutline, starOutline, star, addCircleOutline, trashOutline, chevronDownOutline, calendarOutline } from 'ionicons/icons';
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../supabaseClient';
 import styles from './styles.module.scss';
@@ -7,12 +7,16 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useAuth } from '../../contexts/auth';
 import PauseModal from '../pauseModal';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Haptics, 
+  //ImpactStyle
+   } from '@capacitor/haptics';
 import { getProgramActivityId } from '../../hooks/sessions';
+import { schedulePauseEndNotification } from '../pauseNotif';
+import ExerciseMedia from '../exerciseMedia';
+import ExerciseHistoryModal from '../modals/exerciseHistory';
 
 
 export default function WorkoutTracker({ session, onClose, programInfo }) {
-
 
     const { user, client } = useAuth();
   const [workoutData, setWorkoutData] = useState(() => {
@@ -21,12 +25,21 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
       sessionId: session.id,
       exercises: session.workout_session_exercises.map(exercise => ({
         ...exercise,
-        sets: exercise.workout_session_exercise_sets.map(set => ({
-          ...set,
-          actualKg: '',
-          actualReps: set.planned_reps,
-          completed: false
-        }))
+        // sets: exercise.workout_session_exercise_sets.map(set => ({
+        //   ...set,
+        //   actualKg: '',
+        //   actualReps: set.planned_reps,
+        //   completed: false
+        // }))
+        sets: exercise.workout_session_exercise_sets.map(set => {
+          const initialReps = isNumeric(set.planned_reps) ? set.planned_reps : '';
+          return {
+            ...set,
+            actualKg: '',
+            actualReps: initialReps, // kun tall, ellers tom streng
+            completed: false
+          };
+        })
       })),
       startTime: new Date().toISOString(),
       currentExerciseIndex: 0,
@@ -35,12 +48,38 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
     };
   });
 
+  function isNumeric(value) {
+    return value !== '' && !isNaN(value) && !isNaN(parseFloat(value));
+  }
+  
 
-  const [sessionDuration, setSessionDuration] = useState(0);
+  const calculateDuration = (startTimeString) => {
+    const startTime = new Date(startTimeString).getTime();
+    const now = Date.now();
+    const seconds = Math.floor((now - startTime) / 1000);
+    return seconds < 0 ? 0 : seconds;
+  };
+
+
+  const [sessionDuration, setSessionDuration] = useState(() => {
+    return calculateDuration(workoutData.startTime);
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [presentToast] = useIonToast();
   const swiperRef = useRef(null);
   const [pauseCountdown, setPauseCountdown] = useState(null);
+  const [pauseEndTime, setPauseEndTime] = useState(null);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [selectedExerciseId, setSelectedExerciseId] = useState(null);
+  const [selectedExerciseName, setSelectedExerciseName] = useState('');
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSessionDuration(calculateDuration(workoutData.startTime));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [workoutData.startTime]);
 
   useEffect(() => {
     localStorage.setItem('current-workout', JSON.stringify(workoutData));
@@ -54,21 +93,90 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   }, []);
 
   useEffect(() => {
-    if (pauseCountdown === null) return;
-    if (pauseCountdown <= 0) {
-        Haptics.impact({ style: ImpactStyle.Heavy });
+    const savedEndTime = localStorage.getItem('pauseEndTime');
+    if (savedEndTime) {
+      setPauseEndTime(parseInt(savedEndTime, 10));
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (pauseEndTime) {
+      localStorage.setItem('pauseEndTime', pauseEndTime.toString());
+    } else {
+      localStorage.removeItem('pauseEndTime');
+    }
+  }, [pauseEndTime]);
+
+  // useEffect(() => {
+  //   if (pauseCountdown === null) return;
+  //   if(pauseCountdown === 3) {
+  //     Haptics.vibrate();
+  //   }
+  //   if(pauseCountdown === 2) {
+  //     Haptics.vibrate();
+  //   }
+  //   if(pauseCountdown === 1) {
+  //     Haptics.vibrate();
+  //   }
+  //   if (pauseCountdown <= 0) {
+  //     Haptics.vibrate();
+  //     setPauseCountdown(null);
+  //     return;
+  //   }
+  //   const interval = setInterval(() => {
+  //     setPauseCountdown(prev => prev - 1);
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [pauseCountdown]);
+
+  useEffect(() => {
+    if (!pauseEndTime) {
       setPauseCountdown(null);
       return;
     }
+  
+    function updateRemaining() {
+      const diff = pauseEndTime - Date.now();
+      return Math.ceil(diff / 1000);
+    }
+  
+    const initial = updateRemaining();
+    setPauseCountdown(initial);
+  
+    if (initial <= 0) {
+      // allerede ferdig
+      setPauseEndTime(null);
+      return;
+    }
+  
     const interval = setInterval(() => {
-      setPauseCountdown(prev => prev - 1);
+      const remaining = updateRemaining();
+      if (remaining <= 0) {
+        clearInterval(interval);
+        // ferdig
+        setPauseCountdown(0);
+        setPauseEndTime(null);
+        // vibrasjon om ønskelig
+        Haptics.vibrate();
+      } else {
+        setPauseCountdown(remaining);
+      }
     }, 1000);
+  
     return () => clearInterval(interval);
-  }, [pauseCountdown]);
+  }, [pauseEndTime]);
 
   const handleClosePauseModal = () => {
-    setPauseCountdown(null);
+    //setPauseCountdown(null);
+    setPauseEndTime(null);
   };
+
+  function handleShowExerciseHistory(exerciseId, exerciseName) {
+    console.log('Viser historikk for øvelse:', exerciseId, exerciseName);
+    setSelectedExerciseId(exerciseId);
+    setSelectedExerciseName(exerciseName);
+    setHistoryModalOpen(true);
+  }
 
   const handleInputChange = (exerciseIndex, setIndex, field, value) => {
     setWorkoutData(prev => {
@@ -118,6 +226,8 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   const finishWorkout = async () => {
     setIsLoading(true);
     try {
+      const finalDuration = calculateDuration(workoutData.startTime);
+
       const { data: insertedLogs, error: logError } = await supabase
         .from('workout_session_logs')
         .insert({
@@ -125,7 +235,7 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
           client_id: client.id,
           client_comment: workoutData.comment,       
           rating: workoutData.rating,
-          duration: sessionDuration,
+          duration: finalDuration,
           start_time: workoutData.startTime,        
           end_time: new Date().toISOString(),       
           name: session.title || 'Økt uten navn'      
@@ -217,12 +327,54 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
   };
 
   return (
-      <IonContent fullscreen style={{ '--padding-top': 'env(safe-area-inset-top)', backgroundColor: 'white' }}>
-        <div className={`${styles.topHeader} mt-3`}>
+    <>
+     <IonHeader style={{ backgroundColor: 'white' }}>
+     <IonToolbar
+    style={{
+      width: '100%'
+    }}
+  >
+    <div className="d-flex col-12 align-items-center justify-content-between">
+      <IonIcon icon={chevronDownOutline} onClick={onClose} style={{fontSize: '24px'}}/>
+    <div
+      className={styles.paginationContainer}
+      style={{
+        display: 'flex',
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      {[...workoutData.exercises, { id: 'review' }].map((_, index) => (
+        <div
+          key={index}
+          className={`${styles.paginationBullet} ${
+            index === workoutData.currentExerciseIndex ? styles.paginationBulletActive : ''
+          }`}
+          onClick={() => swiperRef.current?.slideTo(index)}
+        />
+      ))}
+    </div>
+    <div
+      className={styles.sessionTimer}
+      style={{
+        display: 'flex',
+        alignItems: 'center'
+      }}
+    >
+      <IonIcon icon={timeOutline} />
+      <span>{formatTime(sessionDuration)}</span>
+    </div>
+    </div>
+
+    
+  </IonToolbar>
+        {/* <IonButtons slot="start">
           <IonButton fill="clear" onClick={onClose}>
             <IonIcon icon={chevronDownOutline} />
           </IonButton>
-          {isLoading && <IonSpinner />}
+        </IonButtons>
+      </IonToolbar>
           <div className={styles.paginationContainer}>
             {[...workoutData.exercises, {id: 'review'}].map((_, index) => (
               <div 
@@ -234,12 +386,16 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
               />
             ))}
           </div>
-          
           <div className={styles.sessionTimer}>
             <IonIcon icon={timeOutline} />
             <span>{formatTime(sessionDuration)}</span>
-          </div>
-        </div>
+          </div> */}
+    </IonHeader>
+  <IonContent fullscreen style={{ 
+    //'--padding-top': 'env(safe-area-inset-top)', 
+    backgroundColor: 'white' }}>
+      {isLoading && <IonSpinner />}
+        
         <Swiper
           ref={swiperRef}
           onSlideChange={(swiper) => {
@@ -254,7 +410,7 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
             <SwiperSlide key={exercise.id}>
               <div className={styles.exerciseSlide}>
               <div className={styles.exerciseMedia}>
-                   {exercise.exercise?.video_url ? (
+                   {/* {exercise.exercise?.video_url ? (
                      <video src={exercise.exercise.video_url} controls />
                    ) : (
                      <img 
@@ -262,9 +418,24 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
                        alt={exercise.exercise?.name}
                        className={styles.exerciseImage}
                     />
+                   )} */}
+                   {exercise?.exercise && (
+                    <ExerciseMedia exercise={exercise.exercise} />
                    )}
                  </div>
-                <h2>{exercise.exercise?.name}</h2>
+                 <div className="d-flex align-items-center justify-content-between px-2 mb-3">
+                  <h2>{exercise.exercise?.name}</h2>
+                  <IonIcon
+                    icon={calendarOutline}
+                    onClick={() =>
+                      handleShowExerciseHistory(exercise.exercise?.id, exercise.exercise?.name)
+                    }
+                    style={{
+                      fontSize: '24px',
+                      cursor: 'pointer'
+                    }}
+                  />
+                 </div>
                 
                 <div className={styles.setsTable}>
                   <div className={styles.setsHeader}>
@@ -289,7 +460,7 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
                       />
                                         </div>
                                         <div>
-                                        <IonInput
+                                        {/* <IonInput
                         type="number"
                         inputmode="decimal"
                         placeholder="-"
@@ -297,19 +468,72 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
                         onIonInput={e =>
                         handleInputChange(exerciseIndex, setIndex, 'actualReps', e.detail.value)
                         }
+                    /> */}
+                    <IonInput
+                      type="number"
+                      inputmode="decimal"
+                      placeholder={set.planned_reps || '-'}
+                      value={workoutData.exercises[exerciseIndex].sets[setIndex].actualReps ?? ''}
+                      onIonInput={e =>
+                        handleInputChange(exerciseIndex, setIndex, 'actualReps', e.detail.value)
+                      }
                     />
                         </div>
                                         <div>
                     <IonCheckbox
                         checked={workoutData.exercises[exerciseIndex].sets[setIndex].completed || false}
-                        onIonChange={e => {
-                            const isChecked = e.detail.checked;
-                            handleInputChange(exerciseIndex, setIndex, 'completed', isChecked);
-                            if (isChecked) {
-                            setPauseCountdown(session.pause_timer);
-                            } else {
-                            setPauseCountdown(null);
+                        // onIonChange={e => {
+                        //     const isChecked = e.detail.checked;
+                        //     handleInputChange(exerciseIndex, setIndex, 'completed', isChecked);
+                        //     if (isChecked) {
+                        //     //setPauseCountdown(session.pause_timer);
+                        //     const now = Date.now();
+                        //     const endTime = now + session.pause_timer * 1000; // om X sek
+                        //     setPauseEndTime(endTime);
+                        //     schedulePauseEndNotification(session.pause_timer);
+                        //     } else {
+                        //     setPauseCountdown(null);
+                        //     }
+                        // }}
+                        onIonChange={(e) => {
+                          const isChecked = e.detail.checked;
+                          
+                          // 1) Hent reell "actualReps" og "actualKg"
+                          const actualReps = workoutData.exercises[exerciseIndex].sets[setIndex].actualReps;
+                          const actualKg = workoutData.exercises[exerciseIndex].sets[setIndex].actualKg;
+                        
+                          // 2) Sjekk om de er gyldige tall
+                          const isRepsValid = actualReps && !isNaN(actualReps) && actualReps > 0;
+                          const isKgValid = actualKg && !isNaN(actualKg) && actualKg > 0;
+                        
+                          if (isChecked) {
+                            // 3) Hvis noe ikke er fylt inn, ikke la brukeren huke av
+                            if (!isRepsValid || !isKgValid) {
+                              // du kan sette en feilmelding, rød ramme eller lignende
+                              // og avbryte check
+                              // Eksempel:
+                              presentToast({ 
+                                message: 'Fyll inn gyldig reps og kg før du fullfører settet!', 
+                                duration: 2000,
+                                color: 'warning'
+                              });
+                              // Skru av sjekkboksen igjen:
+                              e.target.checked = false;
+                              return;
                             }
+                            
+                            // 4) Hvis valid => start pause
+                            const now = Date.now();
+                            const endTime = now + session.pause_timer * 1000;
+                            setPauseEndTime(endTime);
+                            schedulePauseEndNotification(session.pause_timer);
+                          } else {
+                            // Avbryt pause
+                            setPauseCountdown(null);
+                          }
+                        
+                          // 5) Uansett, oppdater state for "completed" for å matche 
+                          handleInputChange(exerciseIndex, setIndex, 'completed', isChecked);
                         }}
                         />
                       </div>
@@ -369,6 +593,13 @@ export default function WorkoutTracker({ session, onClose, programInfo }) {
             </div>
           </SwiperSlide>
         </Swiper>
+        <ExerciseHistoryModal
+          isOpen={historyModalOpen}
+          onClose={() => setHistoryModalOpen(false)}
+          exerciseId={selectedExerciseId}
+          exerciseName={selectedExerciseName}
+        />
       </IonContent>
+    </>
   );
 }

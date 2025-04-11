@@ -1,9 +1,20 @@
 import { IonContent, IonPage } from '@ionic/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../../contexts/auth';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 export default function HomPage() {
     const { profile } = useAuth();
+
+    useEffect(() => {
+        LocalNotifications.requestPermissions().then((result) => {
+          if (result.display === 'granted') {
+            console.log('Varslings-tillatelse gitt!');
+          } else {
+            console.log('Brukeren avslo varslings-tillatelse.');
+          }
+        });
+      }, []);
 
     return(
         <IonPage>

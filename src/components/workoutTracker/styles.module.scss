@@ -2,8 +2,9 @@
     background: white;
     padding: 10px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: 15;
+    width:100%;
     z-index: 10;
   }
 
@@ -137,6 +138,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    margin-top: 20%;
   }
   
   .reviewTitle {
@@ -174,4 +176,8 @@
   .completeButton {
     margin-top: auto;
     --border-radius: 8px;
+  }
+
+  .inputError {
+    border: 1px solid red;
   }

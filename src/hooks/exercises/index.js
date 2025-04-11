@@ -157,3 +157,34 @@ export async function FetchAllExercises(userId) {
       console.error(err);
     } 
   }
+
+  export async function fetchExerciseHistory(exerciseId) {
+    
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+    
+    const { data, error } = await supabase
+      .from('workout_log_exercises')
+      .select(`
+        id,
+        created_at,
+        workout_session_log_id,
+        workout_log_sets (
+          id,
+          created_at,
+          set_number,
+          reps,
+          weight
+        )
+      `)
+      .eq('exercise_id', exerciseId)
+      .gte('created_at', twoMonthsAgo.toISOString())
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Feil ved henting av historikk:', error);
+      return [];
+    }
+    return data;
+  }
+  

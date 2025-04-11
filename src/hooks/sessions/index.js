@@ -130,7 +130,7 @@ export const createWorkoutSession = async (sessionData) => {
         *,
         workout_session_exercises (
           *,
-          exercise: exercises ( id, name, image_url ),
+          exercise: exercises ( id, name, image_url, video_url ),
           workout_session_exercise_sets ( * )
         ),
         cover_image: workout_cover_images ( id, image_url )

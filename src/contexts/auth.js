@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
+import { useIonRouter } from '@ionic/react';
 
 const AuthContext = createContext();
 
@@ -9,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(null);
+  const router = useIonRouter();
 
   const fetchProfile = async (currentUser) => {
     if (currentUser) {
@@ -61,6 +63,8 @@ export const AuthProvider = ({ children }) => {
             fetchCoachProfile(currentUser),
             fetchClientProfile(currentUser)
           ]);
+        } else {
+          router.push('/login', 'forward');
         }
       } catch(error) {
         console.error(error);
@@ -76,7 +80,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => listener.subscription.unsubscribe();
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (user) {
